@@ -1,0 +1,58 @@
+<div fxFlex="100" fxLayout="column" fxLayoutAlign="center stretch" fxLayoutGap="15px" style="height: 100%;">
+
+    <div fxLayoutAlign="center center" fxLayoutAlign.lt-md="center stretch" fxFlex="100" >
+        <mat-card fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-evenly center" fxLayoutAlign.lt-md="center stretch" fxFlex="50" fxFlex.lt-md="90" style="margin-top: 20px;">
+            <div fxLayout="column">
+                <mat-card-subtitle>This month's earnings</mat-card-subtitle>
+                <h1 style="font-size: 35px;"><strong>{{earningsData?.ThisMonthsEarning}} TL</strong></h1>
+            </div>
+    
+            <div fxLayout="column">
+                <mat-card-subtitle>Predicted earnings for this month</mat-card-subtitle>
+                <h1 style="font-size: 35px;"><strong>{{ earningsData?.ExpectedEarnings.toFixed(2) }} TL</strong></h1>
+            </div>
+    
+        </mat-card>
+    </div>
+
+    <h1 *ngIf="arrayEmpty(earningHistory)" style="text-align: center;"><strong>No data for previous months.</strong></h1>
+    
+    <div *ngIf="!arrayEmpty(earningHistory)" fxLayout="row" fxLayoutAlign="center center" fxLayoutAlign.lt-md="center stretch" fxFlex>
+        <mat-accordion fxFlex="50" fxFlex.lt-md="90"  style="margin-bottom: 20px;">
+            <!--Index is used to track which panel is open. Depending on the open one, the correct chart is loaded. This helps with lag by loading only one chart-->
+            <mat-expansion-panel *ngFor="let item of earningHistory; let i = index" (opened)="panelOpen(i)">
+                <mat-expansion-panel-header (click)="buildChart(item.dailyData)">
+                    <mat-panel-title>
+                        <strong>{{ item.history.Year }}</strong> - <strong> {{ item.history.Month }}</strong>
+                    </mat-panel-title>
+                    <mat-panel-description fxLayout="row" fxLayoutAlign="space-between center">
+
+                        <span>
+                            <strong>{{ item.history.Total }} TL</strong>
+                        </span>
+                        <span [ngStyle]="{'color': changePercentages[i] < 0 ? 'red' : 'green'}"
+                            matTooltip="Compared to the previous month">
+                            {{changePercentages[i] > 0 ? "+" : ""}} {{ changePercentages[i] }} %
+                        </span>
+
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <apx-chart *ngIf="dailyData && currentOpen == i" [series]="chartOptions.series"
+                    [chart]="chartOptions.chart" [title]="chartOptions.title" [xaxis]="chartOptions.xaxis"
+                    [dataLabels]="chartOptions.dataLabels">
+                </apx-chart>
+                <ul>
+                    <li>You can click on the labels (the bubles under the chart) to select and unselect which data is going to be displayed.</li>
+                    <li>Only the orders that actually "Completed" are displayed. The rejected ones aren't displayed.</li>
+                    <li>The day that the order was completed is when the order is accounted.
+                        Example: If the order was received at "1/1/2021" but the order was completed on "2/1/2021", the
+                        order is accounted on the 2nd of the month.</li>
+                </ul>
+            </mat-expansion-panel>
+
+        </mat-accordion>
+
+    </div>
+
+</div>
+

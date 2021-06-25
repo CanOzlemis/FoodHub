@@ -1,0 +1,150 @@
+<div fxLayout="row" fxLayout.lt-md="column">
+    <app-cart fxFlex="50" (refreshHistory)="updateOrderHistory()"></app-cart>
+
+    <div fxFlex>
+        <h1>Order history</h1>
+        <h1 *ngIf="arrayEmpty(orderHistory)" style="text-align: center;">There are no previous orders.</h1>
+        <div *ngIf="!arrayEmpty(orderHistory)">
+
+            <mat-accordion>
+                <div fxLayout="column" fxLayoutAlign="space-around stretch" *ngFor="let order of orderHistory">
+                    <!-- The opened() function allows to track which ID order is opened. Using the knowledge of what is opened, we can keep that expansion panel open again once the new values are received from back-end -->
+                    <mat-expansion-panel (opened)="openedOrderId = order.OrderId" [expanded]="openedOrderId == order.OrderId">
+                        <mat-expansion-panel-header style="min-height: 150px;">
+                            <mat-panel-title>
+                                <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+                                    <div fxLayout="column" fxLayoutAlign="space-between center">
+                                        <p matTooltip="Order number">{{order.OrderId}}</p>
+                                        <p matTooltip="The date and time that the order was sent at (day/month/year - Hour:minute)">{{order.Created |
+                                            date:'d/M/yy hh:mm'}}</p>
+                                    </div>
+                                    <div fxLayout="column" fxLayoutAlign="space-between center">
+                                        <p matTooltip="Name of the restaurant"><strong> {{order.Restaurant}}</strong>
+                                        </p>
+                                        <p>
+                                            Status:
+                                            <strong *ngIf="order.Status == 'Rejected'"
+                                                style="color: red;">{{order.Status}}</strong>
+                                            <strong *ngIf="order.Status == 'Accepted'"
+                                                style="color: green;">{{order.Status}}</strong>
+                                            <strong *ngIf="order.Status == 'Waiting'"
+                                                style="color: yellowgreen;">{{order.Status}}</strong>
+                                            <strong *ngIf="order.Status == 'Completed'"
+                                                style="color: purple;">{{order.Status}}</strong>
+                                        </p>
+                                    </div>
+
+
+
+                                </div>
+                            </mat-panel-title>
+                            <mat-panel-description fxLayout="row" fxLayoutAlign="space-between start">
+                                <div>
+                                    Total: <strong>{{getTotal(order.Details)}}</strong> ₺
+                                </div>
+                                <button mat-raised-button color="primary" *ngIf="order.AllowReview"
+                                    (click)="AddReview(order)">Leave a review</button>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+
+                        <div>
+
+                            <div fxLayout="row" fxLayoutAlign="space-between start">
+                                <h1>
+                                    Order details
+                                </h1>
+
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div style="width: 500px;" fxLayout="column" fxLayoutAlign="center stretch">
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <p fxFlex="30"><strong>Order number: </strong></p>
+                                    <p fxFlex="70">{{order.OrderId}}</p>
+                                </div>
+
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <p fxFlex="30"><strong>Sent at: </strong></p>
+                                    <p fxFlex="70">{{order.Created | date:'medium'}}</p>
+                                </div>
+
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <p fxFlex="30"><strong>Updated at: </strong></p>
+                                    <p fxFlex="70">{{order.Updated | date:'medium'}}</p>
+                                </div>
+
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <p fxFlex="30"><strong>Status: </strong></p>
+                                    <p fxFlex="70">
+                                        <strong *ngIf="order.Status == 'Rejected'"
+                                            style="color: red;">{{order.Status}}</strong>
+                                        <strong *ngIf="order.Status == 'Accepted'"
+                                            style="color: green;">{{order.Status}}</strong>
+                                        <strong *ngIf="order.Status == 'Waiting'"
+                                            style="color: yellowgreen;">{{order.Status}}</strong>
+                                        <strong *ngIf="order.Status == 'Completed'"
+                                            style="color: purple;">{{order.Status}}</strong>
+                                    </p>
+                                </div>
+
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <p fxFlex="30"><strong>Progress: </strong></p>
+                                    <p fxFlex="70">
+                                        <mat-progress-bar mode="determinate"
+                                            [color]="order.Status === 'Rejected' ? 'warn' : 'primary'"
+                                            [value]="getProgressValue(order.Status)">
+                                        </mat-progress-bar>
+                                    </p>
+                                </div>
+
+
+                                <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between start">
+                                    <p fxFlex="30" fxFlex.lt-sm="100"><strong>Note: </strong></p>
+                                    <p fxFlex="70" fxFlex.lt-sm="100">{{order.Note}}</p>
+                                </div>
+
+                                <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between start">
+                                    <p fxFlex="30" fxFlex.lt-sm="100"><strong>Address: </strong></p>
+                                    <p fxFlex="70" fxFlex.lt-sm="100">{{order.Address}}</p>
+                                </div>
+
+                                <mat-divider></mat-divider>
+
+                                <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between start">
+                                    <p fxFlex="30" fxFlex.lt-sm="100"><strong>Item(s): </strong></p>
+                                    <div fxFlex="70" fxFlex.lt-sm="100">
+                                        <ul>
+                                            <li *ngFor="let item of order.Details">{{item.Quantity}}x {{item.ProductName}} : ({{item.ProductPrice}}₺ per unit) =
+                                                <strong>{{item.ProductPrice * item.Quantity}}₺</strong></li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+
+                                <mat-divider></mat-divider>
+
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <p fxFlex="30"><strong>Total: </strong></p>
+                                    <p fxFlex="70" style="font-size: large;"><strong>{{getTotal(order.Details)}}
+                                            ₺</strong></p>
+                                </div>
+
+
+                            </div>
+                            <mat-divider></mat-divider>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+            </mat-accordion>
+
+
+
+        </div>
+        <!-- Actions -->
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <button mat-raised-button color="primary" (click)="PreviousPage()">Previous page</button>
+            <h3>Page {{currentPage + 1}} </h3>
+            <button mat-raised-button color="primary" (click)="NextPage()">Next page</button>
+        </div>
+    </div>
+</div>

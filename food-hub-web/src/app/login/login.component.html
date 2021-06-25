@@ -1,0 +1,110 @@
+<div id="background">
+  <div [ngStyle]="{'display': isLogin ? 'inline' : 'none'}">
+    <div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+  
+      <mat-card class="box">
+        <mat-card-header>
+          <mat-card-title>Log in</mat-card-title>
+        </mat-card-header>
+  
+        <form [formGroup]="loginForm" (ngSubmit)="LoginSubmit(loginForm)" autocomplete="off">
+          <mat-card-content>
+            <mat-form-field class="example-full-width" appearance="outline">
+              <span matPrefix><mat-icon>alternate_email</mat-icon> &nbsp;</span>
+              <mat-label>E-Mail</mat-label>
+              <input matInput type="email" placeholder="E-mail" formControlName="email">
+              <mat-error *ngIf="loginForm.get('email').invalid">Not a valid email</mat-error>
+            </mat-form-field>
+          
+  
+            <mat-form-field class="example-full-width" appearance="outline">
+              <span matPrefix><mat-icon>vpn_key</mat-icon> &nbsp;</span>
+              <mat-label>Password</mat-label>
+              <input matInput type="password" placeholder="Password" formControlName="password" minlength="6">
+              <mat-hint align="end">
+                Forgot your password? <strong (click)="ResetPassword()" class="Register">Reset password</strong>
+              </mat-hint>
+              <mat-error *ngIf="loginForm.get('password').errors?.minlength">Password can't be shorter than 6 characters</mat-error>
+            </mat-form-field>
+
+
+          </mat-card-content>
+          <button mat-raised-button type="submit" color="primary" class="btn-block" [disabled]="!loginForm.valid">Log
+            in <mat-icon>login</mat-icon></button>
+        </form>
+        <mat-hint style="text-align: center;">
+          Don't have account? No problem. <strong (click)="toggleButton()" class="Register">Register</strong>
+        </mat-hint>
+        <hr>
+        <mat-hint style="text-align: center;">
+          Want to become partners and work with us? <strong [routerLink]="['/partner/Registration']"
+            class="Register">Become a partner!</strong>
+        </mat-hint>
+      </mat-card>
+  
+    </div>
+  </div>
+
+
+
+  <div [ngStyle]="{'display': isLogin ? 'none' : 'inline'}">
+    <div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+      <mat-card class="box">
+        <mat-card-header>
+          <mat-card-title>Register</mat-card-title>
+        </mat-card-header>
+  
+        <form [formGroup]="registerForm" autocomplete="off" (ngSubmit)="RegistrationSubmit(registerForm)">
+  
+          <mat-card-content>
+            <mat-form-field class="example-full-width">
+              <input matInput type="text" placeholder="First name" formControlName="firstName" required maxlength="50">
+              <mat-error *ngIf="firstName.errors?.required">First name can't be empty</mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="example-full-width">
+              <input matInput type="text" placeholder="Last name" formControlName="lastName" required maxlength="50">
+              <mat-error *ngIf="lastName.errors?.required">Last name can't be empty</mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="example-full-width">
+              <input matInput type="email" placeholder="E-mail" formControlName="email" email required>
+              <mat-error *ngIf="email.invalid">Not a valid email</mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="example-full-width">
+              <input matInput type="text" placeholder="Phone number" formControlName="phoneNumber"
+                (keypress)="phoneNumberInputCheck($event)"  minlength="11" required mask="(0000) 000 00 00">
+            </mat-form-field>
+  
+            <mat-form-field class="example-full-width">
+              <input matInput type="password" placeholder="Password" formControlName="password" minlength="6" required>
+              <mat-error *ngIf="password.errors?.minlength">Password can't be shorter than 6 characters</mat-error>
+              <mat-error *ngIf="password.errors?.required">Password field can't be empty</mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="example-full-width">
+              <input matInput type="password" placeholder="Repeat Password" formControlName="repeatPassword" minlength="6"
+                required>
+                <mat-error *ngIf="repeatPassword.errors?.minlength">Password can't be shorter than 6 characters</mat-error>
+                <mat-error *ngIf="repeatPassword.errors?.required">Repeat password field can't be empty</mat-error>
+            </mat-form-field>
+            <div [ngStyle]="{'color': isMatching() ? 'green' : 'red'}">Matching : {{ isMatching() }}</div>
+  
+  
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" class="btn-block" [disabled]="!registerForm.valid">Register</button>
+            <mat-hint style="margin: 25px;">Already have a account? Back to <strong (click)="toggleButton()"
+                class="Register">Login</strong></mat-hint>
+          </mat-card-actions>
+  
+  
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+
+

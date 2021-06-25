@@ -1,0 +1,43 @@
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Conversation with restaurant
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+
+<div fxLayout="column" fxLayoutAlign="center stretch">
+    <mat-dialog-content fxFlex="0 0">
+        <div style="height: 50vh; overflow-y: scroll;" #commentEl [scrollTop]="scrolltop">
+            <article *ngFor="let message of conversationHistory"  [ngClass]="{'msg-self': message.FromUserId == userId}"  class="msg-container">
+                <div class="msg-box">
+                    <div class="flr">
+                        <div class="messages">
+                            <p class="msg">
+                                {{message.Message}}
+                            </p>
+                        </div>
+                        <span class="timestamp"><span class="username">{{message.FromUserName}}</span>&bull;<span class="posttime">{{message.SentAt | date:'medium'}}</span></span>
+                    </div>
+                </div>
+            </article>
+        </div>
+        
+    </mat-dialog-content>
+</div>
+
+
+<mat-dialog-actions>
+    <form [formGroup]="messageField" fxFlex fxLayout="column" fxLayoutAlign="start stretch" autocomplete="off">
+
+        <mat-form-field appearance="outline" fxFlex>
+            <mat-label>Message</mat-label>
+            <input matInput type="text" formControlName="message" maxlength="300">
+        </mat-form-field>
+
+        <button mat-raised-button color="accent" (click)="sendMessage()" [disabled]="messageField.invalid">Send <mat-icon>send</mat-icon></button>
+
+    </form>
+</mat-dialog-actions>

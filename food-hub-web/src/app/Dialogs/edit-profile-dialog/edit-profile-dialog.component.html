@@ -1,0 +1,31 @@
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Edit profile
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+
+
+<div fxLayout="column">
+    <mat-dialog-content fxFlex="0 0" fxlayout="column" *ngIf="editProfileForm">
+
+        <form [formGroup]="editProfileForm" fxFlex fxLayout="column" fxLayoutAlign="start stretch" autocomplete="off">
+
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Address</mat-label>
+                <textarea matInput type="text" formControlName="address" rows="8" required maxlength="300" #address></textarea>
+                <mat-hint align="end">{{address.value.length}} / 300</mat-hint>
+                
+            </mat-form-field>
+            <mat-hint>This information will be used to auto fill the address forms when giving orders.</mat-hint>
+
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+        <button mat-raised-button [mat-dialog-close]="false" color="warn">Cancel</button>
+        <button mat-raised-button color="primary" *ngIf="editProfileForm" [mat-dialog-close]="editProfileForm.get('address').value">Save</button>
+    </mat-dialog-actions>
+</div>

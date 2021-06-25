@@ -1,0 +1,163 @@
+<ng-template #orderDetails>
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutAlign.lt-md="center stretch"
+        fxLayoutGap="15px">
+        <div fxFlex="calc(40%-15px)" style="text-align: center;">
+            <h1><strong>{{cartItems[0]?.RestaurantName}}</strong></h1>
+            <h2><strong>Total = {{total}} ₺</strong></h2>
+            <p><strong>Payment style: </strong> Payment at door</p>
+            <mat-divider></mat-divider>
+        </div>
+
+        <div fxFlex="calc(60%-15px)">
+            <mat-list role="list" *ngFor="let item of cartItems" fxLayoutGap="50px">
+
+                <mat-list-item role="listitem">
+                    <div fxFlex fxLayout="row" fxLayoutAlign="start stretch"
+                        fxLayoutAlign.lt-sm="space-between stretch">
+                        <div fxFlex="50" fxLayout="column">
+                            <p>{{item.ProductName}}</p>
+                            <p>{{item.ProductPrice}} ₺ x {{item.Quantity}}</p>
+                        </div>
+                        <div fxFlex="45" style="font-size: large;">
+                            <strong> {{item.ProductPrice * item.Quantity}} ₺</strong>
+                        </div>
+                    </div>
+
+                    <mat-divider></mat-divider>
+                </mat-list-item>
+            </mat-list>
+
+        </div>
+    </div>
+
+</ng-template>
+
+
+
+<ng-template #form>
+    <div>
+        <div fxLayout="column" fxLayoutAlign="center stretch">
+
+            <form [formGroup]="orderInfoForm" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center stretch"
+                fxLayoutGap="15px" autocomplete="off">
+
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Note (optional)</mat-label>
+                    <textarea matInput type="text" formControlName="note" cols="8" maxlength="200" #note></textarea>
+                    <mat-hint align="end">{{note.value.length}} / 200</mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Address</mat-label>
+                    <textarea matInput type="text" formControlName="address" cols="8" required maxlength="300" #addres></textarea>
+                    <mat-hint align="end">{{addres.value.length}} / 300</mat-hint>
+                    <mat-error *ngIf="orderInfoForm.get('address').errors?.required">Address field can't be empty
+                    </mat-error>
+                </mat-form-field>
+            </form>
+        </div>
+    </div>
+</ng-template>
+
+
+
+<ng-template #checkout>
+    <div fxLayout="column">
+        <h3><strong>Restaurant name: </strong> {{cartItems[0]?.RestaurantName}}</h3>
+        <h3><strong>Your note:</strong> {{orderInfoForm?.get("note")?.value}}</h3>
+        <h3><strong>Address to send:</strong> {{orderInfoForm?.get("address")?.value}}</h3>
+        <h1 style="text-align: center;"><strong>Total: {{total}} ₺</strong> </h1>
+
+        <button fxFlex mat-raised-button color="primary" [mat-dialog-close]="returnValue()"
+            [disabled]="!orderInfoForm.valid">Send order</button>
+        <mat-error *ngIf="orderInfoForm.get('address').errors?.required">Address field can't be empty</mat-error>
+    </div>
+</ng-template>
+
+
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Send order
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+
+    <mat-horizontal-stepper linear="false" fxHide.lt-sm fxShow.gt-sm>
+        <mat-step label="Order details">
+            <ng-container *ngTemplateOutlet="orderDetails"></ng-container>
+            <div fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px" style="margin-top: 15px;">
+                <p></p>
+                <button mat-stroked-button color="primary" matStepperNext>Next</button>
+            </div>
+        </mat-step>
+
+
+        <mat-step label="Fill out your address">
+            <ng-container *ngTemplateOutlet="form"></ng-container>
+            <div fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+                <button mat-stroked-button color="primary" matStepperPrevious>Back</button>
+                <button mat-stroked-button color="primary" matStepperNext>Next</button>
+            </div>
+        </mat-step>
+
+
+        <mat-step label="Checkout">
+            <ng-container *ngTemplateOutlet="checkout"></ng-container>
+            <div style="margin-top: 15px;">
+                <button mat-stroked-button color="primary" matStepperPrevious>Back</button>
+            </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+
+
+
+    <mat-vertical-stepper fxShow.lt-sm fxHide.gt-xs>
+        <mat-step label="Order details">
+            <ng-container *ngTemplateOutlet="orderDetails"></ng-container>
+            <div fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px" style="margin-top: 15px;">
+                <p></p><!-- to push the "next" button to right -->
+                <button mat-stroked-button color="primary" matStepperNext>Next</button>
+            </div>
+        </mat-step>
+
+
+        <mat-step label="Fill out your address">
+            <ng-container *ngTemplateOutlet="form"></ng-container>
+            <div fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+                <button mat-stroked-button color="primary" matStepperPrevious>Back</button>
+                <button mat-stroked-button color="primary" matStepperNext>Next</button>
+            </div>
+        </mat-step>
+
+
+        <mat-step label="Checkout">
+            <ng-container *ngTemplateOutlet="checkout"></ng-container>
+            <div style="margin-top: 15px;">
+                <button mat-stroked-button color="primary" matStepperPrevious>Back</button>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
+
+    <!-- <div fxLayout="column" fxLayoutAlign="center stretch">
+    <mat-dialog-content fxFlex="0 0" >
+        <form [formGroup]="orderInfoForm" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center stretch" fxLayoutGap="15px" autocomplete="off">
+    
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Note (optional)</mat-label>
+                <textarea matInput type="text" formControlName="note" cols="8"></textarea>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Address</mat-label>
+                <textarea matInput type="text" formControlName="address" cols="8" required></textarea>
+            </mat-form-field>
+        </form>
+    
+    </mat-dialog-content>
+</div> -->
+</mat-dialog-content>
+<mat-divider></mat-divider>

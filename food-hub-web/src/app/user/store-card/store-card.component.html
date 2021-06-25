@@ -1,0 +1,150 @@
+
+<div id="bannerImage" style="height: 500px;" fxLayout="row" fxLayoutAlign="center stretch"
+    fxLayout.lt-md="column-reverse" fxLayoutAlign.lt-md="center center">
+    <div fxFlex="50" fxLayout="column" fxLayoutAlign="center stretch">
+        <mat-card fxFlex fxLayout="column" fxLayoutAlign="center stretch">
+            <div fxLayout="column">
+                <mat-card-title class="mat-headline" style="font-size: xx-large;">
+                    Search for your favorite restaurant and make a order in less than a minute!
+                </mat-card-title>
+                <form [formGroup]="searchForm" (ngSubmit)="getRestaurantList()" fxFlex="100" fxLayoutGap="5px"
+                    autocomplete="off" fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center stretch">
+                    <div fxLayout="row" fxLayout.lt-sm="column" fxFlex="calc(75%-5px)" fxLayoutGap="5px">
+                        <mat-form-field appearance="outline" fxFlex="calc(50%-5px)" fxflex.lt-md="100">
+                            <mat-label>Name</mat-label>
+                            <input matInput formControlName="Name">
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" fxFlex="calc(50%-5px)" fxflex.lt-md="100">
+                            <mat-label>City</mat-label>
+                            <input matInput formControlName="City">
+                        </mat-form-field>
+                    </div>
+
+
+
+
+                    <button mat-raised-button type="submit" id="SearchButton" matSuffix fxFlex="calc(25%-5px)"
+                        [disabled]="!searchForm.valid">Search
+                        <mat-icon>search</mat-icon>
+                    </button>
+
+                </form>
+            </div>
+
+        </mat-card>
+    </div>
+
+
+    <div id="bannerImage" fxFlex="50" fxHide.lt-md fxShow>
+
+    </div>
+</div>
+
+
+<div class="content">
+    <h1 *ngIf="arrayEmpty(restaurants)" style="text-align: center;"><strong>No restaurants was found</strong></h1>
+    <div fxLayout="row wrap" fxLayoutAlign="start stretch" fxLayoutGap="16px grid">
+        <div *ngFor="let restaurant of restaurants" fxFlex="0 0 calc(25% - 16px)" fxFlex.md="calc(33% - 16px)"
+            fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.xs="0 0 calc(100% - 16px)" fxLayoutAlign="space-between start">
+
+            <mat-card class="restaurantCard" fxFlex
+                [routerLink]="['/menu', generateLinkParameter(restaurant.restaurantDetail.Name, restaurant.restaurantDetail.Id) ]"
+                [queryParams]="{ restId: restaurant.restaurantDetail.Id}">
+
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div fxLayout="column">
+                        <mat-card-title>{{ restaurant.restaurantDetail.Name }}</mat-card-title>
+                        <mat-card-subtitle>Working times {{restaurant.workingTime.OpenAt.Hour + ":" + restaurant.workingTime.OpenAt.Minute + " - "
+                            + restaurant.workingTime.CloseAt.Hour + ":" + restaurant.workingTime.CloseAt.Minute}}
+                            ----- <strong>{{restaurant.isOpen ? "Open" : "Closed"}}</strong>
+                        </mat-card-subtitle>
+                    </div>
+
+                </div>
+
+                <img mat-card-image
+                    [src]="restaurant.Image ? 'data:image/jpeg;base64,' + restaurant.Image : '/assets/LogoLarge.png'"
+                    style="height: 200px; object-fit: cover;" alt="Restaurant cover image">
+                <mat-card-content>
+
+                    <div fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutGap="3px grid">
+
+
+                        <div matTooltip="Expected time to deliver order. This time is defined by the restaurant."
+                            fxLayout="column" style="text-align: center;">
+                            <div fxLayout="row" class="IconWithText">
+                                <mat-icon>
+                                    access_alarm
+                                </mat-icon>
+                                <h2 style="color: #673ab7; margin: 0 !important;"><b>{{
+                                        restaurant.restaurantDetail.AverageDeliveryTime }} </b></h2>
+                            </div>
+                            <div>
+                                <h4><b>Minutes</b></h4>
+                            </div>
+
+                        </div>
+
+
+                        <div fxLayout="row" fxLayoutAlign="center center">
+                            <div *ngFor="let star of [1,2,3,4,5]">
+                                <div
+                                    *ngIf="storeRating(star, restaurant.restaurantDetail.Rating); then fullStar; else halfStarOrEmptyStar">
+                                </div>
+
+                                <ng-template #fullStar>
+                                    <span class="material-icons">
+                                        star
+                                    </span>
+                                </ng-template>
+                                <ng-template #halfStarOrEmptyStar>
+                                    <div
+                                        *ngIf="halfOrEmptyStar(star, restaurant.restaurantDetail.Rating); then halfStar; else emptyStar">
+                                    </div>
+                                    <ng-template #halfStar>
+                                        <span class="material-icons">
+                                            star_half
+                                        </span>
+                                    </ng-template>
+                                    <ng-template #emptyStar>
+                                        <span class="material-icons">
+                                            star_outline
+                                        </span>
+                                    </ng-template>
+                                </ng-template>
+                            </div>
+                        </div>
+
+
+                        <div fxLayout="column" fxLayoutAlign="center center"
+                            matTooltip="Minimum amount required to be able to make a order."
+                            style="text-align: center;">
+                            <div fxLayout="row" class="IconWithText">
+                                <mat-icon>
+                                    credit_card
+                                </mat-icon>
+                                <h2 style="color: #673ab7; margin: 0 !important;"><b>{{
+                                        restaurant.restaurantDetail.MinOrderPrice }} TL</b></h2>
+                            </div>
+                            <div>
+                                <h4><b>Min. Order</b></h4>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <p style="margin-top: 25px;">
+                        {{ restaurant.restaurantDetail.About }}
+                    </p>
+
+
+                </mat-card-content>
+                <mat-card-footer style="text-align: center; background-color: rgba(113, 11, 185, 0.315);">
+                    {{restaurant.restaurantDetail.City}} / {{restaurant.restaurantDetail.Street}}
+                </mat-card-footer>
+            </mat-card>
+        </div>
+    </div>
+</div>

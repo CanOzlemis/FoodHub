@@ -1,0 +1,8 @@
+.closeIcon:hover{
+    cursor: pointer;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
+}

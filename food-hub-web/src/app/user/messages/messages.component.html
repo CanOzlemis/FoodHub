@@ -1,0 +1,101 @@
+<div fxFlex="100" fxLayout="row" fxLayoutAlign="center center" style="margin-top: 25px;">
+    <div fxFlex="75" fxFlex.lt-md="98" fxLayout="column">
+        <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="20px">
+
+            <!--Display all messages when the page is large enough-->
+            <div fxFlex="calc(30%-20px)">
+                <mat-card style="padding: 0; padding-bottom: 20px;">
+                    <mat-card-header style="padding-top: 16px;">
+                        <mat-card-title>All messages</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+
+                        <!-- WHEN THERE ARE NO CONVERSATIONS -->
+                        <div *ngIf="arrayEmpty(Conversations)">
+                            <div fxLayout="row" fxLayoutAlign="space-between center" class="conversation">
+                                <div>
+                                    <h3 style="margin: 0;"><strong>You have no conversations</strong></h3>
+                                    <mat-card-subtitle>When you have any messages, it will be shown here!
+                                    </mat-card-subtitle>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngFor="let conversation of Conversations" class="conversation"
+                            (click)="openConversation(conversation.ConversationWithId, conversation.ConversationWith, conversation.ConversationId); conversation.Unread = 0">
+
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <div>
+                                    <h3 style="margin: 0;"><strong>{{conversation.ConversationWith}}</strong></h3>
+                                    <mat-card-subtitle>{{conversation.LastMessageAt | date : 'HH:mm - dd/MM/YYYY'}}
+                                    </mat-card-subtitle>
+                                </div>
+                                <button *ngIf="conversation.Unread" mat-mini-fab color="primary" aria-label="Unread messages">
+                                    {{conversation.Unread}}
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            
+
+            <div fxFlex="calc(70%-20px)">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Conversation with <div style="color: #673ab7">{{toUserName}}</div></mat-card-title>
+                    </mat-card-header>
+                </mat-card>
+
+                <mat-card >
+
+                    <mat-card-content>
+                        <div style="height: 50vh; overflow-y: scroll;" #commentEl [scrollTop]="scrolltop" >
+
+
+                            <article *ngFor="let message of conversationHistory"  [ngClass]="{'msg-self': message.FromUserId == userId}"  class="msg-container">
+                                <div class="msg-box">
+                                    <div class="flr">
+                                        <div class="messages">
+                                            <p class="msg">
+                                                {{message.Message}}
+                                            </p>
+                                        </div>
+                                        <span class="timestamp"><span class="username">{{message.FromUserName}}</span>&bull;<span class="posttime">{{message.SentAt | date:'medium'}}</span></span>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <h1 *ngIf="arrayEmpty(conversationHistory)" style="height: 100%;" fxLayoutAlign="center center"><strong>There is no message history with this person</strong></h1>
+                        </div>
+                        
+                    </mat-card-content>
+
+                    <mat-divider></mat-divider>
+                </mat-card>
+
+                <mat-card>
+                    <mat-card-actions fxLayout="column">
+                        <mat-hint>Never share your private details such as your password with anyone!</mat-hint>
+                        <form [formGroup]="messageField" fxFlex fxLayout="column" fxLayoutAlign="start stretch"
+                            autocomplete="off">
+
+                            <mat-form-field appearance="outline" fxFlex>
+                                <mat-label>Message</mat-label>
+                                <input matInput type="text" formControlName="message" maxlength="300">
+                            </mat-form-field>
+
+                            <button mat-raised-button color="accent" (click)="sendMessage()" [disabled]="messageField.invalid">Send <mat-icon>send</mat-icon> </button>
+
+                        </form>
+                    </mat-card-actions>
+                </mat-card>
+
+            </div>
+
+        </div>
+    </div>
+    
+</div>

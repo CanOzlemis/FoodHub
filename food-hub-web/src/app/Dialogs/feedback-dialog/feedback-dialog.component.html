@@ -1,0 +1,41 @@
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Send feedback!
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+
+
+<div fxLayout="column">
+    <mat-dialog-content fxFlex="0 0" fxlayout="column" *ngIf="feedbackForm">
+
+        <form [formGroup]="feedbackForm" fxFlex fxLayout="column" fxLayoutAlign="start stretch" autocomplete="off">
+
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Feedback type</mat-label>
+                <mat-select formControlName="type">
+                    <mat-option value="Suggestion">Suggestion</mat-option>
+                    <mat-option value="Question">Question</mat-option>
+                    <mat-option value="BugReport">Bug report</mat-option>
+                    <mat-option value="SomethingElse">Something else</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Feedback</mat-label>
+                <textarea matInput type="text" formControlName="message" rows="16"></textarea>
+            </mat-form-field>
+            <mat-hint>Thank you for using Food Hub. Your feedback allows us to make our service better for you and all
+                of our customers. Thank you! </mat-hint>
+
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+        <button mat-raised-button [mat-dialog-close]="false" color="warn">Cancel</button>
+        <button mat-raised-button color="primary" [disabled]="feedbackForm && !feedbackForm.valid" (click)="sendFeedback()"
+            [mat-dialog-close]="true">Send</button>
+    </mat-dialog-actions>
+</div>

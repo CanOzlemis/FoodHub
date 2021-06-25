@@ -1,0 +1,84 @@
+<mat-card class="mat-elevation-z4">
+    <mat-card-header>
+        <mat-card-title>{{ restaurant.Name }}</mat-card-title>
+        <mat-card-subtitle>Working times {{workingTime[now].OpenAt.Hour + ":" + workingTime[now].OpenAt.Minute + " - "
+            + workingTime[now].CloseAt.Hour + ":" + workingTime[now].CloseAt.Minute}}
+        </mat-card-subtitle>
+    </mat-card-header>
+    <!-- src="https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" -->
+    <img mat-card-image [src]="Image?.length ? Image : '/assets/LogoLarge.png'"
+        style="max-height: 200px; object-fit:cover;" alt="Restaurant cover image">
+    <mat-card-content>
+
+        <div fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutGap="3px grid">
+
+
+            <div matTooltip="Expected time to deliver order. This time is defined by the restaurant." fxLayout="column"
+                style="text-align: center;">
+                <div fxLayout="row" class="IconWithText">
+                    <mat-icon>
+                        access_alarm
+                    </mat-icon>
+                    <h2 style="color: #673ab7; margin: 0 !important;"><b>{{
+                            restaurant.AverageDeliveryTime }} </b></h2>
+                </div>
+                <div>
+                    <h4><b>Minutes</b></h4>
+                </div>
+
+            </div>
+
+
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <div *ngFor="let star of [1,2,3,4,5]">
+                    <div *ngIf="storeRating(star, restaurant.Rating); then fullStar; else halfStarOrEmptyStar">
+                    </div>
+
+                    <ng-template #fullStar>
+                        <span class="material-icons">
+                            star
+                        </span>
+                    </ng-template>
+                    <ng-template #halfStarOrEmptyStar>
+                        <div *ngIf="halfOrEmptyStar(star, restaurant.Rating); then halfStar; else emptyStar">
+                        </div>
+                        <ng-template #halfStar>
+                            <span class="material-icons">
+                                star_half
+                            </span>
+                        </ng-template>
+                        <ng-template #emptyStar>
+                            <span class="material-icons">
+                                star_outline
+                            </span>
+                        </ng-template>
+                    </ng-template>
+                </div>
+            </div>
+
+
+            <div fxLayout="column" fxLayoutAlign="center center"
+                matTooltip="Minimum amount required to be able to make a order." style="text-align: center;">
+                <div fxLayout="row" class="IconWithText">
+                    <mat-icon>
+                        credit_card
+                    </mat-icon>
+                    <h2 style="color: #673ab7; margin: 0 !important;"><b>{{
+                            restaurant.MinOrderPrice }} TL</b></h2>
+                </div>
+                <div>
+                    <h4><b>Min. Order</b></h4>
+                </div>
+            </div>
+
+        </div>
+
+
+        <p style="margin-top: 25px;">
+            {{ restaurant.About }}
+        </p>
+    </mat-card-content>
+    <mat-card-footer style="text-align: center; background-color: rgba(113, 11, 185, 0.315);">
+        {{restaurant.City}} / {{restaurant.Street}}
+    </mat-card-footer>
+</mat-card>

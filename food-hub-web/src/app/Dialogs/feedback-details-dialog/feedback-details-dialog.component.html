@@ -1,0 +1,29 @@
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Feedback details
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+    <div fxLayout="column">
+        <h3>Feedback Id: {{data.Id }}</h3>
+        <h3>Type: {{data.Type }}</h3>
+        <h3 matTooltip="day/month/year - Hour:minute">Created at: {{data.Created | date: 'dd/mm/YYYY - HH:ss' }}</h3>
+        <h3>Message: </h3>
+    
+        <p> {{data.Message }} </p>
+    
+    </div>
+</mat-dialog-content>
+
+
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-raised-button color="warn" [mat-dialog-close]="false">Close</button>
+
+    <button mat-raised-button color="primary" (click)="openUser(data.UserId)">View user</button>
+</mat-dialog-actions>

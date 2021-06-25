@@ -1,0 +1,56 @@
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Leave a review
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+
+
+    <label id="example-radio-group-label">Pick your rating</label>
+    <mat-radio-group aria-labelledby="Rating stars" [(ngModel)]="rating" fxLayout="column">
+        <mat-radio-button value="1">
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+        </mat-radio-button>
+        <mat-radio-button value="2">
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+        </mat-radio-button>
+        <mat-radio-button value="3">
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+        </mat-radio-button>
+        <mat-radio-button value="4">
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+        </mat-radio-button>
+        <mat-radio-button value="5">
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+            <mat-icon aria-hidden="false">star_rate</mat-icon>
+        </mat-radio-button>
+    </mat-radio-group>
+
+
+    <form [formGroup]="formData" fxLayout="column" fxLayoutAlign="start stretch" autocomplete="off">
+
+        <mat-form-field appearance="outline" fxFlex="15%">
+            <mat-label>Comment</mat-label>
+            <textarea matInput type="text" formControlName="comment" #comment maxlength="200"></textarea>
+            <mat-hint align="end">{{comment.value.length}} / 200</mat-hint>
+        </mat-form-field>
+
+    </form>
+</mat-dialog-content>
+<mat-mat-dialog-actions  fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-raised-button [mat-dialog-close]="false" color="warn" style="margin-right: 5px;">Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="!rating" (click)="PostReview()">Send</button>
+</mat-mat-dialog-actions>

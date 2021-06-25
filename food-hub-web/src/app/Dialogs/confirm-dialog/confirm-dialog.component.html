@@ -1,0 +1,23 @@
+
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+  <h1>
+      {{data.Title}}
+  </h1>
+  <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+      close
+  </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+    <p>{{data.Body}}</p>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions  fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-stroked-button [mat-dialog-close]="false" cdkFocusInitial>Cancel</button>
+  <div>
+    <mat-checkbox  [(ngModel)]="checked" style="margin-right: 20px;" color="primary">Accept</mat-checkbox>
+    <button mat-raised-button color="warn" [disabled]="!checked" [mat-dialog-close]="true">{{data.Action}}</button>
+  </div>
+  
+</mat-dialog-actions>

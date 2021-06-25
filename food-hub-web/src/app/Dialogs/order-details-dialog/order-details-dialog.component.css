@@ -1,0 +1,10 @@
+.data {
+    text-align: start;
+}
+
+.tooltip-red {
+    background: #b71c1c;
+}
+.closeIcon:hover {
+    cursor: pointer;
+}

@@ -1,0 +1,23 @@
+table {
+    width: 100%;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    padding: 15px !important;
+}
+
+@media only screen and (max-width: 760px) {
+    th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+        padding: 2px !important;
+    }
+ }
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+
+mat-card {
+    padding: 15px;
+}

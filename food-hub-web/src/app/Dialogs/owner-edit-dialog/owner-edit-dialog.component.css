@@ -1,0 +1,12 @@
+
+.time:hover, .closeIcon:hover{
+    cursor: pointer;
+}
+
+::ng-deep .mat-form-field-infix {
+    width: auto;
+}
+
+mat-form-field{
+    width: 100%;
+}

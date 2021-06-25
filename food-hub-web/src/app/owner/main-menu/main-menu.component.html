@@ -1,0 +1,380 @@
+<mat-tab-group *ngIf="restaurantDetails" (selectedTabChange)="onTabChanged($event);"
+    [(selectedIndexChange)]="selectedIndex" dynamicHeight>
+    <mat-tab style="height: 100%;"  label="Info">
+        <ng-template mat-tab-label>
+            <mat-icon style="margin-right: 8px;">info</mat-icon>
+            Info
+        </ng-template>
+        <div *ngIf="!restaurantDetails.Active" style="background-color: red;  text-align: center; height: 50px; vertical-align: middle;">
+            <h1 style="color: white;"><strong>RESTAURANT IS DISABLED</strong></h1>
+        </div>
+        <div style="margin-top: 15px; margin-bottom: 15px;" fxLayout="row" fxLayout.lt-md="column"
+            fxLayoutAlign="space-evenly stretch" fxLayoutAlign.lt-md="space-around stretch" fxLayoutGap="15px">
+
+            <mat-card class="Info" style="border-left: 5px solid coral;">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon>account_circle</mat-icon>Name of the restaurant
+                    </mat-card-title>
+
+                </mat-card-header>
+                <mat-card-content>
+                    <p style="text-align: center;">
+                        {{ restaurantDetails.Name }}
+                    </p>
+                </mat-card-content>
+
+            </mat-card>
+
+
+
+
+
+            <mat-card class="Info" style="border-left: 5px solid lightskyblue;">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon>description</mat-icon>About restaurant
+                    </mat-card-title>
+
+                </mat-card-header>
+                <mat-card-content>
+                    <p>
+                        {{ restaurantDetails.About }}
+                    </p>
+                </mat-card-content>
+
+            </mat-card>
+
+
+
+            <mat-card class="Info" style="border-left: 5px solid greenyellow;">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon>paid</mat-icon>Minimum order amount
+                    </mat-card-title>
+
+                </mat-card-header>
+                <mat-card-content>
+                    <p style="text-align: center;">
+                        {{ restaurantDetails.MinOrderPrice }} ₺
+                    </p>
+                </mat-card-content>
+
+            </mat-card>
+
+
+            <mat-card class="Info" style="border-left: 5px solid rgb(29, 32, 207);">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon>hourglass_full</mat-icon>Average delivery time
+                    </mat-card-title>
+
+                </mat-card-header>
+                <mat-card-content>
+                    <p style="text-align: center;">
+                        {{ restaurantDetails.AverageDeliveryTime }} minutes
+                    </p>
+                </mat-card-content>
+            </mat-card>
+
+
+            <mat-card class="Info" style="border-left: 5px solid rgb(207, 29, 29);">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon>star</mat-icon>Restaurant rating
+                    </mat-card-title>
+
+                </mat-card-header>
+                <mat-card-content>
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                        <div *ngFor="let star of [1,2,3,4,5]">
+                            <div
+                                *ngIf="storeRating(star, restaurantDetails.Rating ); then fullStar; else halfStarOrEmptyStar">
+                            </div>
+
+                            <ng-template #fullStar>
+                                <span class="material-icons">
+                                    star
+                                </span>
+                            </ng-template>
+                            <ng-template #halfStarOrEmptyStar>
+                                <div
+                                    *ngIf="halfOrEmptyStar(star, restaurantDetails.Rating ); then halfStar; else emptyStar">
+                                </div>
+                                <ng-template #halfStar>
+                                    <span class="material-icons">
+                                        star_half
+                                    </span>
+                                </ng-template>
+                                <ng-template #emptyStar>
+                                    <span class="material-icons">
+                                        star_outline
+                                    </span>
+                                </ng-template>
+                            </ng-template>
+                        </div>
+                        <span matTooltip="Rating displayed numerically">({{restaurantDetails.Rating }})</span>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+        </div>
+
+
+        <div fxLayout="row wrap" fxLayoutAlign="center stretch" fxLayout.lt-md="column"
+            fxLayoutAlign.lt-md="space-evenly stretch" fxLayoutGap="15px grid">
+            <div fxFlex="calc(25%-15px)" fxFlex.lt-lg="calc(50%-15px)" fxLayoutAlign="space-evenly stretch"
+                fxLayoutGap="16px">
+
+                <mat-card fxFlex>
+                    <mat-card-content fxLayout="column">
+                        <h1 style="text-align: center;">Preview</h1>
+                        <app-template-card fxFlex [restaurant]="restaurantDetails" [workingTime]="workingTimes" [Image]="displayImage">
+                        </app-template-card>
+                    </mat-card-content>
+                </mat-card>
+
+
+            </div>
+
+            <div fxFlex="calc(25%-15px)" fxFlex.lt-lg="calc(50%-15px)" fxLayoutAlign="space-evenly stretch"
+                fxLayoutGap="16px">
+
+                <mat-card fxFlex>
+                    <mat-card-content fxLayout="column">
+                        <h1 style="text-align: center;">Map</h1>
+                        <iframe *ngIf="restaurantDetails?.MapSrc" [src]="restaurantDetails.MapSrc | safe" height="416"
+                            style="border:0;" allowfullscreen="" loading="lazy" title="Google maps location of the restaurant"></iframe>
+                        <h1 *ngIf="!restaurantDetails?.MapSrc" style="text-align: center;"><strong>Map is not set</strong></h1>
+                    </mat-card-content>
+                </mat-card>
+
+
+            </div>
+
+            <div fxLayoutAlign="space-evenly stretch" fxFlex="calc(25%-15px)">
+                <mat-card fxFlex>
+                    <mat-card-content fxLayout="column">
+                        <div fxFlex>
+                            <h1 style="text-align: center;">Working times</h1>
+                            <table mat-table [dataSource]="workingTimes" class="mat-elevation-z8"
+                                style="width: 100%; margin-top: 15px; margin-bottom: 10px;">
+
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="Day">
+                                    <th mat-header-cell *matHeaderCellDef> Day </th>
+                                    <td mat-cell *matCellDef="let element"> {{day(element.Day)}} </td>
+                                </ng-container>
+
+                                <!-- about Column -->
+                                <ng-container matColumnDef="OpenTime">
+                                    <th mat-header-cell *matHeaderCellDef> Open Time </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.OpenAt.Hour + ":" + element.OpenAt.Minute }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="CloseTime">
+                                    <th mat-header-cell *matHeaderCellDef> Close time </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.CloseAt.Hour + ":" + element.CloseAt.Minute }} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="['Day', 'OpenTime', 'CloseTime']">
+                                </tr>
+                                <tr mat-row *matRowDef="let row; columns: ['Day', 'OpenTime', 'CloseTime'];">
+                                </tr>
+                            </table>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+
+            <div fxFlex="calc(25%-15px)" fxFlex.lt-md="calc(50%-15px)" fxLayoutAlign="space-evenly stretch"
+                fxLayoutGap="16px" fxLayout="column">
+
+                <mat-card fxFlex="30" [id]="happiness" fxLayoutAlign="center center">
+ 
+                    <fa-icon *ngIf="happiness == 'Happy'" size="5x" [icon]="IconSmile"></fa-icon>
+                    <fa-icon *ngIf="happiness == 'Satisfied'" size="5x" [icon]="IconMeh"></fa-icon>
+                    <fa-icon *ngIf="happiness == 'Unhappy'" size="5x" [icon]="IconFrown"></fa-icon>
+                    <fa-icon *ngIf="happiness == 'Empty'" size="5x" [icon]="IconEmpty"></fa-icon>
+                    <strong *ngIf="happiness != 'Empty'">Recent customers are {{happiness}}</strong>
+                    <strong *ngIf="happiness == 'Empty'">No data on customer happiness</strong>
+
+                </mat-card>
+
+                <mat-card fxFlex>
+                    <mat-card-content fxLayout="column" fxLayoutGap="15px">
+                        <h1 style="text-align: center;">Actions</h1>
+
+                        <button mat-raised-button fxFlex (click)="openDialog()" color="primary"><mat-icon>edit</mat-icon> Edit restaurant
+                            info</button>
+                        <div *ngIf="restaurantDetails.Active" fxLayout="column" fxLayoutGap="15px">
+                            <button 
+                            mat-stroked-button 
+                            fxFlex 
+                            style="color: green;"
+                            >
+                                Restaurant is active
+                            </button>
+                            <p>Your restaurant is active and visible to everyone.</p>
+                            <button 
+                            mat-stroked-button 
+                            fxFlex 
+                            color="warn"
+                            matTooltip="Disabling the restaurant will make your restaurant invisible to all the users and you wont be able to 
+                            activate the restaurant until an administrator approves your request."
+                            (click)="disableRestaurant()">Disable restaurant</button>
+                        </div>
+
+                        <div *ngIf="!restaurantDetails.Active" fxLayout="column" fxLayoutGap="15px">
+                            <button mat-stroked-button fxFlex color="warn">
+                                Restaurant is disabled
+                            </button>
+                            <p>Your restaurant is not visible to any customer
+                                and you can't receive any orders. You can click on
+                                the 'Request to activate restaurant' in order to send a
+                                request to Food Hub admins to activate your restaurant .</p>
+                            <button 
+                            style="color: white; background-color: green;"
+                            mat-stroked-button 
+                            fxFlex
+                            (click)="requestEnableRestaurant()"
+                            *ngIf="!restaurantDetails.ActivationRequest">Request to activate restaurant</button>
+                            <h2 *ngIf="restaurantDetails.ActivationRequest"><strong>Request sent, waiting for approval...</strong></h2>
+                        </div>
+
+                    </mat-card-content>
+                </mat-card>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!--SOCIAL MEDIA AND CONTACT-->
+        <div fxLayout="column" style="margin-top: 15px; margin-bottom: 15px;">
+
+            <div fxFlex fxLayout="row wrap" fxLayoutAlign="center stretch" fxLayoutGap="16px grid">
+
+                <div fxFlex="calc(25%-16px)" fxFlex.lt-md="calc(50%-16px)">
+                    <mat-card class="link" fxFlex (click)="OpenLink(restaurantDetails.Facebook, 'facebook')">
+                        <mat-card-content fxLayout="row">
+                            <div fxFlex="25" fxLayoutAlign="center center">
+                                <fa-icon style="font-size: 55px;" [icon]="IconFacebook"></fa-icon>
+                            </div>
+    
+                            <div fxLayout="column" fxFlex  style="text-align: center;">
+                                <h1>Facebook</h1>
+                                <p *ngIf="restaurantDetails.Facebook">{{restaurantDetails.Facebook}}</p>
+                                <p *ngIf="!restaurantDetails.Facebook">Not set.</p>
+                            </div>
+    
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                
+
+
+
+                <div fxFlex="calc(25%-16px)" fxFlex.lt-md="calc(50%-16px)">
+                    <mat-card class="link" fxFlex (click)="OpenLink(restaurantDetails.Instagram, 'instagram')">
+                        <mat-card-content fxLayout="row">
+                            <div fxFlex="25" fxLayoutAlign="center center">
+                                <fa-icon style="font-size: 55px;" [icon]="IconInstagram"></fa-icon>
+                            </div>
+    
+                            <div fxLayout="column" fxFlex  style="text-align: center;">
+                                <h1>Instagram</h1>
+                                <p *ngIf="restaurantDetails.Instagram">{{restaurantDetails.Instagram}}</p>
+                                <p *ngIf="!restaurantDetails.Instagram">Not set.</p>
+                            </div>
+    
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+              
+
+
+                <div fxFlex="calc(25%-16px)" fxFlex.lt-md="calc(50%-16px)">
+                    <mat-card class="link" fxFlex (click)="OpenLink(restaurantDetails.Twitter, 'twitter')">
+                        <mat-card-content fxLayout="row">
+                            <div fxFlex="25" fxLayoutAlign="center center">
+                                <fa-icon style="font-size: 55px;" [icon]="IconTwitter"></fa-icon>
+                            </div>
+    
+                            <div fxLayout="column" fxFlex  style="text-align: center;">
+                                <h1>Twitter</h1>
+                                <p *ngIf="restaurantDetails.Twitter">{{restaurantDetails.Twitter}}</p>
+                                <p *ngIf="!restaurantDetails.Twitter">Not set.</p>
+                            </div>
+    
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                
+
+
+
+                <div fxFlex="calc(25%-16px)" fxFlex.lt-md="calc(50%-16px)">
+                    <mat-card fxFlex>
+                        <mat-card-content fxLayout="row">
+                            <div fxFlex="25" fxLayoutAlign="center center">
+                                <fa-icon style="font-size: 55px;" [icon]="IconPhone"></fa-icon>
+                            </div>
+    
+                            <div fxLayout="column" fxFlex  style="text-align: center;">
+                                <h1>Phone number</h1>
+                                <p>{{restaurantDetails.PhoneNumber}}</p>
+                            </div>
+    
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                
+
+            </div>
+
+        </div>
+
+
+    </mat-tab>
+    <mat-tab label="Orders">
+        <ng-template mat-tab-label>
+            <mat-icon style="margin-right: 8px;">shopping_cart</mat-icon>
+            Orders <span id="orderCountBubble">{{orderCount}}</span>
+        </ng-template>
+
+        <app-orders #orders (orderCount)="orderCount = $event"></app-orders>
+
+    </mat-tab>
+    <mat-tab label="Menu">
+        <ng-template mat-tab-label>
+            <mat-icon style="margin-right: 8px;">receipt</mat-icon>
+            Menu
+        </ng-template>
+
+        <app-owner-menu></app-owner-menu>
+
+    </mat-tab>
+    <mat-tab label="Reviews and comments">
+        <ng-template mat-tab-label>
+            <mat-icon style="margin-right: 8px;">stars</mat-icon>
+            Reviews and comments
+        </ng-template>
+
+        <app-rating-and-reviews #ratings></app-rating-and-reviews>
+
+    </mat-tab>
+    <mat-tab  label="Economics">
+        <ng-template mat-tab-label>
+            <mat-icon style="margin-right: 8px;">trending_up</mat-icon>
+            Economics
+        </ng-template>
+
+        <app-economics #economics></app-economics>
+
+    </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,12 @@
+mat-icon {
+    vertical-align: middle;
+}
+
+mat-icon:hover {
+    cursor: pointer;
+}
+
+button{
+    white-space: pre-wrap !important;
+  }
+

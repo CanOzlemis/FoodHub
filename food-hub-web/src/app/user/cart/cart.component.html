@@ -1,0 +1,71 @@
+<div fxLayout="row" fxLayout.lt-md="column">
+    <div fxFlex style="margin: 15px;">
+        <mat-card style="border-left: 5px solid rgb(16, 196, 16);">
+            <div *ngIf="cartItems">
+
+                <div fxLayout="row">
+                    <div>
+                        <button mat-flat-button>
+                            <mat-icon style="font-size: xx-large;">shopping_cart</mat-icon>
+                        </button>
+
+                    </div>
+                    <div>
+                        <mat-card-title>Cart</mat-card-title>
+                        <mat-card-subtitle>{{cartItems[0].RestaurantName}}</mat-card-subtitle>
+                    </div>
+                </div>
+
+                <mat-divider></mat-divider>
+                <mat-card-content>
+                    <mat-list role="list" *ngFor="let item of cartItems" fxLayoutGap="50px">
+
+                        <mat-list-item role="listitem">
+                            <div fxFlex="30" fxLayout="column">
+                                <p>{{item.ProductName}}</p>
+                                <p>{{item.ProductPrice}} ₺ x {{item.Quantity}}</p>
+                            </div>
+                            <div fxFlex="30" style="font-size: large;">
+                                <strong> {{item.ProductPrice * item.Quantity}} ₺</strong>
+                            </div>
+                            <div fxFlex="40" fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="15px">
+                                <mat-icon class="actions" aria-hidden="false" matTooltip="Increase quantity"
+                                    (click)="Increment(item.ProductId)">add_circle_outline</mat-icon>
+                                <mat-icon class="actions" aria-hidden="false" matTooltip="Decrease quantity"
+                                    (click)="Decrease(item.ProductId)">remove_circle_outline</mat-icon>
+                                <mat-icon class="actions" aria-hidden="false" matTooltip="Remove from cart"
+                                    (click)="RemoveItem(item.ProductId)">highlight_off</mat-icon>
+                            </div>
+                            <mat-divider></mat-divider>
+                        </mat-list-item>
+                    </mat-list>
+                    <h1 style="text-align: center;"><strong>Total = {{total}} ₺</strong></h1>
+
+
+                </mat-card-content>
+                <mat-card-actions fxLayout="row" fxLayoutAlign="space-between center">
+                    <button mat-raised-button color="warn" (click)="clearCart()"><mat-icon>remove_shopping_cart</mat-icon> Clear Cart</button>
+                    <button mat-raised-button color="primary" (click)="openDialog(cartItems[0].RestaurantId)">Send
+                        Order</button>
+                </mat-card-actions>
+            </div>
+
+            <div *ngIf="!cartItems">
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <button mat-flat-button>
+                        <mat-icon style="font-size: xx-large;">shopping_cart</mat-icon>
+                    </button>
+                    <mat-card-title>Cart</mat-card-title>
+                </div>
+
+                <mat-divider></mat-divider>
+                <h1 style="text-align: center;"><strong>No items in cart</strong></h1>
+            </div>
+
+
+        </mat-card>
+    </div>
+
+
+
+</div>

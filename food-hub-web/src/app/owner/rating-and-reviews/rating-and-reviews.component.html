@@ -1,0 +1,96 @@
+<div fxLayout="column" fxLayoutAlign="center stretch" style="height: 100%;">
+    <div fxLayout="column" fxFlex="100" fxFlex.lt-sm="95" fxLayoutGap="35px">
+        <h1 *ngIf="arrayEmpty(ReviewAndComments)" style="text-align: center;"><strong>No reviews has been submitted yet.</strong></h1>
+        <div *ngFor="let review of ReviewAndComments"  fxLayoutAlign="center" fxFlex="75" fxFlex.lt-sm="95">
+            <div fxFlex="50" fxFlex.lt-md="95">
+                
+                <mat-card fxLayout="column" >
+                    <mat-card-header fxLayout="row">
+                        <!-- fxLayoutAlign="start center" -->
+                        <div mat-card-avatar>
+                            <mat-icon style="font-size: 35px;">account_circle</mat-icon>
+                        </div>
+                        <mat-card-title>
+                            
+    
+    
+                            <div fxLayout="row" fxLayoutAlign="center center">
+                                <strong>User</strong>
+                                <div *ngFor="let star of [1,2,3,4,5]">
+                                    <div
+                                        *ngIf="storeRating(star, review.Rating); then fullStar; else halfStarOrEmptyStar">
+                                    </div>
+    
+                                    <ng-template #fullStar>
+                                        <span class="material-icons">
+                                            star
+                                        </span>
+                                    </ng-template>
+                                    <ng-template #halfStarOrEmptyStar>
+                                        <div
+                                            *ngIf="halfOrEmptyStar(star, review.Rating); then halfStar; else emptyStar">
+                                        </div>
+                                        <ng-template #halfStar>
+                                            <span class="material-icons">
+                                                star_half
+                                            </span>
+                                        </ng-template>
+                                        <ng-template #emptyStar>
+                                            <span class="material-icons">
+                                                star_outline
+                                            </span>
+                                        </ng-template>
+                                    </ng-template>
+                                </div>
+                                ({{review.Rating}})
+                            </div>
+    
+    
+    
+                        </mat-card-title>
+                        <mat-card-subtitle matTooltip="day/month/year - Hour:minute">
+                            {{review.Created | date:'d/M/yy - hh:mm'}}
+                        </mat-card-subtitle>
+    
+                    </mat-card-header>
+    
+    
+                    <mat-card-content fxLayout="column" fxLayoutAlign="start start">
+                        <p [ngStyle]="{'color': review.Deleted ? 'red' : 'black'}"> {{review.Comment}}</p>
+                        <mat-divider></mat-divider>
+                        <div *ngIf="review.Response" style="margin-top: 0px;">
+                            <mat-divider></mat-divider>
+                            <div fxLayout="row" fxLayoutAlign="start center" style="font-size: large;">
+                                
+                                <div mat-card-avatar>
+                                    <mat-icon style="font-size: 35px;">store</mat-icon>
+                                </div>
+                                <strong>Restaurant response</strong>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <p>{{review.Response}}</p>
+                        </div>
+                    </mat-card-content>
+    
+    
+                    <mat-card-actions *ngIf="!review.Deleted && !review.Response" fxFlex>
+                        <mat-divider></mat-divider>
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+                            <button mat-raised-button color="warn" *ngIf="review.Comment !== ''" (click)="OpenDeleteDialog(review.OrderId)" matTooltip="Delete user comment">
+                               <mat-icon>delete</mat-icon> Delete
+                            </button>
+                             <div></div> <!--This div is used for aligning the "add response" button to the right when there is no "delete" button -->
+                            <button mat-raised-button color="primary" (click)="OpenResponseDialog(review)">
+                                Add response
+                            </button>
+    
+                        </div>
+                    </mat-card-actions>
+    
+                </mat-card>
+            </div>
+ 
+            <mat-divider></mat-divider>
+        </div>
+    </div>
+</div>

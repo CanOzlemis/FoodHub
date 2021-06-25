@@ -1,0 +1,29 @@
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Reject order
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+
+
+<div fxLayout="column">
+    <mat-dialog-content fxFlex="0 0" fxlayout="column">
+
+        <form [formGroup]="formData" fxFlex fxLayout="column" fxLayoutAlign="start stretch" autocomplete="off">
+
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Rejection reason</mat-label>
+                <input matInput type="text" formControlName="reason" maxlength="300">
+            </mat-form-field>
+
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+        <button mat-raised-button [mat-dialog-close]="false" color="warn">Cancel</button>
+        <button mat-raised-button color="primary" [disabled]="!formData.valid"
+            [mat-dialog-close]="formData.get('reason').value">Send</button>
+    </mat-dialog-actions>
+</div>

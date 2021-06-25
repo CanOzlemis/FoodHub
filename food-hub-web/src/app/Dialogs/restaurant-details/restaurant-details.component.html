@@ -1,0 +1,234 @@
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Restaurant details
+    </h1>
+    <mat-icon [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+
+
+<mat-dialog-content fxLayout="column" fxLayout.lt-sm="column">
+
+    <div>
+        <h1><strong>Current Earnings</strong></h1>
+        <h3>As of right now the current earning is: <strong>{{CurrentEarnings}} TL</strong> </h3>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div>
+        <h1><strong>Previous Months Earnings</strong></h1>
+        <h1 *ngIf="arrayEmpty(PreviousMonthsEarnings)" style="text-align: center;"><strong>No data</strong></h1>
+        <ul style="width: 200px;">
+            <li *ngFor="let item of PreviousMonthsEarnings" fxLayout="row" fxLayoutAlign="space-between start">
+                <div>
+                    {{item.Year}} - {{item.Month}}
+                </div>
+                <div>
+                    <strong> {{item.Total}} TL</strong>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div>
+        <h1><strong>Restaurant Details</strong></h1>
+        <div fxLayout="column" fxLayoutAlign="center stretch" *ngIf="RestaurantDetails">
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Id: </strong></p>
+                <p fxFlex="70">{{RestaurantDetails.Id}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Name: </strong></p>
+                <p fxFlex="70">{{RestaurantDetails.Name}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>About: </strong></p>
+                <p fxFlex="70">{{RestaurantDetails.About}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Minimum Order Price: </strong></p>
+                <p fxFlex="70">{{RestaurantDetails.MinOrderPrice}} TL</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Average Delivery Time: </strong></p>
+                <p fxFlex="70">{{RestaurantDetails.AverageDeliveryTime}} minutes</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Created at: </strong></p>
+                <p fxFlex="70" matTooltip="day/month/year - Hour:minute">{{RestaurantDetails.Created | date:'dd/MM/YYYY - HH:mm'}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Updated at: </strong></p>
+                <p fxFlex="70" matTooltip="day/month/year - Hour:minute">{{RestaurantDetails.Updated | date:'dd/MM/YYYY - HH:mm'}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Active: </strong></p>
+                <p fxFlex="70" [ngStyle]="{'color': RestaurantDetails.Active ? 'green' : 'red'}">
+                    {{RestaurantDetails.Active ? "Active" : "Disabled"}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Rating: </strong></p>
+                <p fxFlex="70">{{RestaurantDetails.Rating}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Happiness: </strong></p>
+                <p fxFlex="70" [id]="Happiness">{{Happiness}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Phone Number: </strong></p>
+                <p fxFlex="70">{{RestaurantDetails.PhoneNumber}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>City: </strong></p>
+                <p fxFlex="70">{{RestaurantDetails.City}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Street: </strong></p>
+                <p fxFlex="70">{{RestaurantDetails.Street}}</p>
+            </div>
+
+            <img *ngIf="Image" [src]="Image | safe" style="max-height: 200px; object-fit:cover; border: 1px solid red;">
+            <h1 *ngIf="!Image" style="text-align: center;"><strong>Restaurant has no image to be displayed.</strong>
+            </h1>
+
+            <iframe *ngIf="RestaurantDetails?.MapSrc" [src]="RestaurantDetails.MapSrc | safe" fxFlex height="450"
+                style="border:0;" allowfullscreen="" loading="lazy" style="margin: 15px"></iframe>
+            <h1 *ngIf="!RestaurantDetails?.MapSrc" style="text-align: center;"><strong>Restaurant has no map location
+                    set.</strong></h1>
+
+
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div>
+        <h1><strong>Working Times</strong></h1>
+        <div>
+            <mat-card>
+                <mat-card-content fxLayout="column">
+                    <div fxFlex>
+                        <table mat-table [dataSource]="WorkingsTimes" class="mat-elevation-z8"
+                            style="width: 100%; margin-top: 15px; margin-bottom: 10px;">
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="Day">
+                                <th mat-header-cell *matHeaderCellDef> Day </th>
+                                <td mat-cell *matCellDef="let element"> {{day(element.Day)}} </td>
+                            </ng-container>
+
+                            <!-- about Column -->
+                            <ng-container matColumnDef="OpenTime">
+                                <th mat-header-cell *matHeaderCellDef> Open Time </th>
+                                <td mat-cell *matCellDef="let element"> {{element.OpenAt.Hour + ":" +
+                                    element.OpenAt.Minute }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="CloseTime">
+                                <th mat-header-cell *matHeaderCellDef> Close time </th>
+                                <td mat-cell *matCellDef="let element"> {{element.CloseAt.Hour + ":" +
+                                    element.CloseAt.Minute }} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="['Day', 'OpenTime', 'CloseTime']">
+                            </tr>
+                            <tr mat-row *matRowDef="let row; columns: ['Day', 'OpenTime', 'CloseTime'];">
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div>
+        <h1><strong>Owner Info</strong></h1>
+
+        <div fxLayout="column" fxLayoutAlign="center stretch" *ngIf="RestaurantDetails">
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Id: </strong></p>
+                <p fxFlex="70">{{OwnerInfo.Id}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>First Name: </strong></p>
+                <p fxFlex="70">{{OwnerInfo.FirstName}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Last Name: </strong></p>
+                <p fxFlex="70">{{OwnerInfo.LastName}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Phone Number: </strong></p>
+                <p fxFlex="70">{{OwnerInfo.PhoneNumber}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Email: </strong></p>
+                <p fxFlex="70">{{OwnerInfo.Email}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Created: </strong></p>
+                <p fxFlex="70" matTooltip="day/month/year - Hour:minute">{{OwnerInfo.Created | date:'dd/MM/YYYY - HH:mm'}}</p>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+                <p fxFlex="30"><strong>Updated: </strong></p>
+                <p fxFlex="70" matTooltip="day/month/year - Hour:minute">{{OwnerInfo.Updated | date:'dd/MM/YYYY - HH:mm'}}</p>
+            </div>
+
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+
+
+
+
+</mat-dialog-content>
+
+
+
+
+<mat-divider></mat-divider>
+<mat-dialog-actions fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="space-between center"
+    fxLayoutAlign.lt-lg="center stretch" fxLayoutGap="5px">
+    <button *ngIf="OwnerInfo" mat-raised-button style="background-color: #45bbee; color: white;" fxFlex
+        [routerLink]="['/messages']" [queryParams]="{ toUserId: OwnerInfo.Id, toUserName: RestaurantDetails.Name }"
+        [mat-dialog-close]="false">
+        <mat-icon>chat</mat-icon>
+        Send message
+    </button>
+    <button *ngIf="!RestaurantDetails?.Active" fxFlex mat-raised-button matToolTip="Enable the restaurant"
+        style="background-color: green; color: white;" (click)="enable(RestaurantDetails.Id)">
+        <mat-icon>check</mat-icon>
+        Enable
+    </button>
+    <button *ngIf="RestaurantDetails?.Active" fxFlex mat-raised-button color="warn" matToolTip="Disable the restaurant"
+        style="margin-top: 5px;" (click)="disable(RestaurantDetails.Id)">
+        <mat-icon>clear</mat-icon>
+        Disable
+    </button>
+    <!-- <button mat-raised-button color="primary" (click)="ToggleMailField()" fxFlex>
+        <mat-icon>mail_outline</mat-icon> {{isMailFieldOpen ? 'Close' : 'Open'}} Email
+    </button> -->
+</mat-dialog-actions>

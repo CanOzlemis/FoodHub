@@ -1,0 +1,47 @@
+.example-full-width {
+    width: 500px;
+}
+
+button {
+    white-space: pre-wrap !important;
+}
+
+.labelIcon {
+    margin-right: 8px;
+}
+
+mat-icon {
+    vertical-align: middle;
+}
+
+mat-card-title {
+    text-align: center;
+}
+
+#Happy {
+    background: rgb(48,194,45);
+}
+
+#Satisfied {
+    background: rgb(184,98,22);
+}
+
+#Unhappy {
+    background: rgb(184,22,22);
+}
+
+#Empty {
+    background: rgb(22,184,177);
+}
+
+.link:hover{
+    cursor: pointer;
+}
+
+#orderCountBubble{
+    padding: 0px 3px;
+    margin-left: 5px;
+    border-radius: 100%;
+    color: white;
+    background-color: #75767a;
+}

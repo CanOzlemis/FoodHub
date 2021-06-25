@@ -1,0 +1,17 @@
+table {
+    width: 100%;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+    padding: 15px !important;
+}
+
+.Owner {
+    color: #673ab7;
+    font-weight: 550;
+}
+
+.Admin {
+    color: red;
+    font-weight: bold;
+}

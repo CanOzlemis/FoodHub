@@ -1,0 +1,274 @@
+<mat-tab-group color="primary" backgroundColor="white" dynamicHeight>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon style="margin-right: 8px;">receipt</mat-icon>
+            Menu
+        </ng-template>
+
+        <div fxLayout="column">
+            <div class="banner" style="min-height: 300px;">
+                <div fxLayout="row" fxLayoutAlign="start center" *ngIf="restaurantDetails"
+                    style="height: 100%; margin-left: 2vw;">
+                    <mat-card fxFlex="50" fxFlex.lt-md="90" fxFlex.lt-sm="99" id="InfoCard">
+                        <mat-card-header>
+                            <mat-dialog-title fxFlex fxLayout="row" fxLayoutAlign="space-between">
+                                <h1>
+                                    <mat-card-title>{{ restaurantDetails.Name }}</mat-card-title>
+                                    <mat-card-subtitle style="margin: 0;">{{restaurantDetails.City}} /
+                                        {{restaurantDetails.Street}}
+                                    </mat-card-subtitle>
+                                    <mat-card-subtitle style="margin: 0;">
+                                        {{workingTime.OpenAt.Hour + ":" + workingTime.OpenAt.Minute + " - "
+                                        + workingTime.CloseAt.Hour + ":" + workingTime.CloseAt.Minute}}
+                                        -----
+                                        <strong>{{isOpen ? "Open" : "Closed"}}</strong>
+                                    </mat-card-subtitle>
+                                </h1>
+                                <div fxLayout="row" fxLayout.lt-sm="column-reverse" fxLayoutGap="25px">
+                                    <button *ngIf="isLoggedIn()" (click)="openMessage()" mat-icon-button
+                                        style="background-color: #45bbee; color: white;"
+                                        matTooltip="Send message to restaurant">
+                                        <mat-icon>chat</mat-icon>
+                                    </button>
+                                    <button mat-icon-button color="warn" (click)="toggleFavorite(restaurantId)"
+                                        style="background-color: #ff0606; color: white;"
+                                        matTooltip="Add/Remove restaurant from favorites">
+                                        <mat-icon>favorite</mat-icon>
+                                    </button>
+                                </div>
+
+                            </mat-dialog-title>
+
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>{{ restaurantDetails.About }}</p>
+                            <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutAlign="space-evenly center">
+                                <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="5px grid">
+                                    <div>
+                                        <button mat-button style="color:white; background-color: #00ae00;">
+                                            <fa-icon [icon]="IconMoney"></fa-icon> {{ restaurantDetails.MinOrderPrice }}
+                                            ₺ -
+                                            Minimum order amount
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button mat-button style="color: white; background-color: #9c00d1;">
+                                            <fa-icon [icon]="IconClock"></fa-icon> {{
+                                            restaurantDetails.AverageDeliveryTime
+                                            }} minute delivery
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button mat-button style="color: white; background-color: #f0a800;">
+                                            <fa-icon [icon]="IconStar"></fa-icon> {{ restaurantDetails.Rating }} rating
+                                        </button>
+                                    </div>
+                                    <div>
+
+                                    </div>
+
+                                </div>
+                                <mat-divider></mat-divider>
+                                <div fxLayout="row wrap" fxLayoutGap="20px" style="margin-top: 50px;">
+                                    <a *ngIf="restaurantDetails.Facebook" class="link"
+                                        [href]="'https://www.facebook.com/'+restaurantDetails.Facebook"
+                                        target="_blank"
+                                        matTooltip="Open Facebook">
+                                        <fa-icon [icon]="IconFacebook"></fa-icon> Facebook
+                                    </a>
+                                    <a *ngIf="restaurantDetails.Instagram" class="link"
+                                    [href]="'https://www.Instagram.com/'+restaurantDetails.Instagram"
+                                    target="_blank"
+                                    matTooltip="Open Instagram">
+                                    <fa-icon [icon]="IconInstagram"></fa-icon> Instagram
+                                    </a>
+                                    <a *ngIf="restaurantDetails.Twitter" class="link"
+                                    [href]="'https://www.Twitter.com/'+restaurantDetails.Twitter"
+                                    target="_blank"
+                                    matTooltip="Open Twitter">
+                                    <fa-icon [icon]="IconTwitter"></fa-icon> Twitter
+                                    </a>
+
+
+                                    <p *ngIf="restaurantDetails.PhoneNumber">
+                                        <fa-icon [icon]="IconPhone"></fa-icon> {{ restaurantDetails.PhoneNumber }}
+                                    </p>
+                                </div>
+                            </div>
+
+
+
+
+
+
+                        </mat-card-content>
+                    </mat-card>
+
+
+                </div>
+            </div>
+
+
+
+            <h1 *ngIf="arrayEmpty(categories)" style="text-align: center;">No menu items exist.</h1>
+            <div fxLayout="row" fxLayoutAlign="center center">
+
+                <div fxLayout="row-reverse" fxLayout.lt-md="column" fxLayoutGap="5px" style="margin:15px"
+                    fxLayoutAlign="center start" fxLayoutAlign.lt-lg="center stretch" fxFlex="75" fxFlex.lt-lg="95"
+                    fxFlex.lt-md="100">
+
+                    <div fxFlex="35" fxLayout="column">
+                        <div>
+                            <app-cart [minAmount]="restaurantDetails?.MinOrderPrice"></app-cart>
+                        </div>
+                        <div>
+
+                            <iframe *ngIf="restaurantDetails?.MapSrc" [src]="restaurantDetails.MapSrc | safe" fxFlex
+                                height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                                style="margin: 15px"></iframe>
+
+                        </div>
+                    </div>
+
+                    <div fxLayout="column" fxFlex fxLayoutGap="15px">
+                        <div *ngFor="let category of categories">
+                            <mat-card style="border-left: 5px solid red;">
+                                <mat-card-title>{{category}}</mat-card-title>
+                                <mat-card-content>
+                                    <div fxLayout="column" fxLayoutAlign="center" *ngFor="let item of menu">
+                                        <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px"
+                                            *ngIf="(item.Category == category)" style="min-height: 40px;">
+                                            <div fxFlex="calc(75% - 5px)" fxFlex.lt-sm="calc(60% - 5px)" fxLayout="row"
+                                                fxLayout.lt-sm="column">
+                                                <!-- On the below line, the  'fxFlex.lt-sm="0 0 0"' is done because when the description is long and the screen size is small, the title takes too much space which slides the description to other items-->
+                                                <div fxFlex="calc(40% - 5px)" fxFlex.lt-sm="0 0 0"
+                                                    fxLayoutAlign=" center">
+                                                    <p><strong>{{item.Name}}</strong></p>
+                                                </div>
+                                                <div fxFlex="calc(60% - 5px)" fxLayoutAlign=" center">
+                                                    <p>{{item.About}}</p>
+                                                </div>
+                                            </div>
+
+                                            <div fxFlex="calc(15% - 5px)" fxFlex.lt-sm="calc(30% - 5px)"
+                                                style="font-size: large;" fxLayoutAlign=" center">
+                                                <p style="color: #673ab7; margin: 0 !important;">
+                                                    <strong>{{item.Price}} TL</strong>
+                                                </p>
+                                            </div>
+                                            <div fxFlex="calc(10% - 5px)" fxLayoutAlign=" center">
+                                                <span class="material-icons cartIcon" (click)="AddtoCart(item)"
+                                                    matTooltip="Add to cart">
+                                                    add_shopping_cart
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                        <mat-divider id="ItemDivider" *ngIf="(item.Category == category)"></mat-divider>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon style="margin-right: 8px;">stars</mat-icon>
+            Reviews and comments
+        </ng-template>
+
+
+        <div fxLayout="column" fxLayoutAlign="center stretch">
+            <h1 *ngIf="arrayEmpty(ReviewAndComments)" style="text-align: center;">There are no reviews.</h1>
+            <div *ngIf="!arrayEmpty(ReviewAndComments)" fxFlex fxLayout="column" fxFlex fxLayoutGap="35px">
+                <div fxLayoutAlign="center" *ngFor="let review of ReviewAndComments">
+                    <div fxLayout="row" fxFlex="50" fxFlex.lt-md="95">
+                        <mat-card fxLayout="column" fxFlex style="border-left: 5px solid rgb(0, 195, 255);">
+                            <mat-card-header fxLayout="row">
+                                <div mat-card-avatar>
+                                    <mat-icon style="font-size: 35px;">account_circle</mat-icon>
+                                </div>
+                                <mat-card-title>
+
+
+
+                                    <div fxLayout="row" fxLayoutAlign="center center">
+                                        <div *ngFor="let star of [1,2,3,4,5]">
+                                            <div
+                                                *ngIf="storeRating(star, review.Rating); then fullStar; else halfStarOrEmptyStar">
+                                            </div>
+
+                                            <ng-template #fullStar>
+                                                <span class="material-icons">
+                                                    star
+                                                </span>
+                                            </ng-template>
+                                            <ng-template #halfStarOrEmptyStar>
+                                                <div
+                                                    *ngIf="halfOrEmptyStar(star, review.Rating); then halfStar; else emptyStar">
+                                                </div>
+                                                <ng-template #halfStar>
+                                                    <span class="material-icons">
+                                                        star_half
+                                                    </span>
+                                                </ng-template>
+                                                <ng-template #emptyStar>
+                                                    <span class="material-icons">
+                                                        star_outline
+                                                    </span>
+                                                </ng-template>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+
+
+
+                                </mat-card-title>
+                                <mat-card-subtitle matTooltip="day/month/year - Hour:minute">
+                                    {{review.Created | date:'d/M/yy - HH:mm'}}
+                                </mat-card-subtitle>
+
+                            </mat-card-header>
+
+
+                            <mat-card-content fxLayout="column" fxLayoutAlign="start start">
+                                <p [ngStyle]="{'color': review.Deleted ? 'red' : 'black'}"> {{review.Comment}}</p>
+                                <mat-divider></mat-divider>
+                                <div *ngIf="review.Response" style="margin-top: 0px;">
+                                    <mat-divider></mat-divider>
+                                    <div fxLayout="row" fxLayoutAlign="start center" style="font-size: large;">
+
+                                        <div mat-card-avatar>
+                                            <mat-icon style="font-size: 35px;">store</mat-icon>
+                                        </div>
+                                        <strong>Restaurant</strong>
+                                    </div>
+                                    <mat-divider></mat-divider>
+                                    <p>{{review.Response}}</p>
+                                </div>
+                            </mat-card-content>
+
+                        </mat-card>
+                    </div>
+
+
+
+
+
+
+                    <mat-divider></mat-divider>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,97 @@
+<div fxLayout="row" fxLayout.lt-md="column-reverse">
+    <div fxFlex="70%" style="margin: 15px; background-color: white;" class="mat-elevation-z8">
+        <div style="margin: 0em 5em;">
+            <mat-form-field style="width: 100%;" appearance="outline">
+                <mat-label>Search orders</mat-label>
+                <input matInput #orderSearchFilter (keyup)="applyFilter($event)" autocomplete="off">
+                <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+        </div>
+        <div style="overflow-y: auto;">
+            <table mat-table [dataSource]="dataSource" style="width: 100%;" matSort matSortActive="Created"
+                matSortDisableClear matSortDirection="asc">
+
+                <ng-container matColumnDef="Created">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sent at </th>
+                    <td mat-cell *matCellDef="let element" matTooltip="day/month/year - Hour:minute"> {{element.Created | date:'dd/MM/YYYY - HH:mm'}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="OrderId">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> OrderId </th>
+                    <td mat-cell *matCellDef="let element"> {{element.OrderId}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                    <td mat-cell *matCellDef="let element">
+                        <strong *ngIf="element.Status == 'Rejected'" style="color: red;">{{element.Status}}</strong>
+                        <strong *ngIf="element.Status == 'Accepted'" style="color: green;">{{element.Status}}</strong>
+                        <strong *ngIf="element.Status == 'Waiting'"
+                            style="color: yellowgreen;">{{element.Status}}</strong>
+                        <strong *ngIf="element.Status == 'Completed'" style="color: purple;">{{element.Status}}</strong>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Total">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+                    <td mat-cell *matCellDef="let element"> <strong align="end">{{element.Total}} ₺</strong>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Actions">
+                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-raised-button color="primary"
+                            (click)="openOrderDetailsDialog(element)">Details</button>
+                    </td>
+                </ng-container>
+
+
+
+                <tr mat-header-row *matHeaderRowDef="['Created', 'OrderId', 'Status', 'Total', 'Actions']">
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: ['Created', 'OrderId', 'Status', 'Total', 'Actions'];">
+                </tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="5">There are no orders right now</td>
+                </tr>
+            </table>
+        </div>
+
+        <mat-paginator [pageSizeOptions]="[10, 15, 20]"></mat-paginator>
+    </div>
+
+
+    <div fxFlex="30%" style="margin: 15px;">
+
+
+        <mat-card>
+            <mat-card-header>
+                <h1>Order Informations</h1>
+            </mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+                <div fxLayout="row" fxLayoutAlign="space-between start">
+                    <div fxLayout="column" fxLayoutAlign="space-between center">
+                        <h2><strong>Waiting</strong></h2>
+                        <h1>{{currentStatusCount('Waiting')}}</h1>
+                    </div>
+
+                    <div fxLayout="column" fxLayoutAlign="space-between center">
+                        <h2><strong>Accepted/Preparing</strong></h2>
+                        <h1>{{currentStatusCount('Accepted')}}</h1>
+                    </div>
+
+                </div>
+                <mat-divider></mat-divider>
+                <div *ngIf="openChart">
+                    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [title]="chartOptions.title"
+                        [xaxis]="chartOptions.xaxis" [dataLabels]="chartOptions.dataLabels"
+                        [noData]="chartOptions.noData"></apx-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

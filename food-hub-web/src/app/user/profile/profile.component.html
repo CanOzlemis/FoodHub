@@ -1,0 +1,320 @@
+<div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="center stretch" fxLayoutAlign.lt-sm="center strech"
+    fxLayoutGap="20px" style="padding-left: 15px;">
+    <mat-card fxFlex="calc(25%-50px)" fxFlex.lt-lg="calc(100%-50px)" style="border-left: 5px solid red;">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column">
+                <mat-card-title>Profile</mat-card-title>
+                <mat-card-subtitle>Your profile information
+                </mat-card-subtitle>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <mat-card-content *ngIf="userData">
+            <div>
+                <p>
+                    <mat-icon>account_box</mat-icon><strong>Name: </strong> {{ userData.FirstName }} {{
+                    userData.LastName }}
+                </p>
+                <p>
+                    <mat-icon>email</mat-icon><strong>Email: </strong> {{ userData.Email }}
+                </p>
+                <label *ngIf="!userData.EmailConfirmed" style="color: red;"> Email is not confirmed</label>
+
+                <p>
+                    <mat-icon>phone</mat-icon><strong>Phone number: </strong> {{ userData.PhoneNumber }}
+                </p>
+                <label 
+                *ngIf="!userData.PhoneNumberConfirmed"
+                style="color: red;" 
+                matTooltip="Your phone number is not confirmed. An admin will contact you to confirm this phone number, generally done over whatsapp. 
+                Or you can request for a restaurant to confirm your number when you give a order (by adding a note at your order). 
+                Let them know how they can contact you such as via whatsapp."
+                >
+                    <span class="material-icons">
+                        warning
+                    </span>
+                    Phone number is not confirmed
+                </label>
+                <p>
+                    <mat-icon>house</mat-icon><strong>Address: </strong> {{ userData.Address ? userData.Address : "Not set" }}
+
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" fxFlex (click)="OpenProfileEditor()"><mat-icon>settings</mat-icon> Edit profile</button>
+            <button mat-raised-button color="warn" fxFlex (click)="OpenChangePassword()"><mat-icon>vpn_key</mat-icon> Change password</button>
+        </mat-card-actions>
+    </mat-card>
+
+
+    <mat-card fxFlex="calc(25%-50px)" fxFlex.lt-lg="calc(50%-50px)" style="border-left: 5px solid Yellow;">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column">
+                <mat-card-title>Total number of orders</mat-card-title>
+                <mat-card-subtitle>Thank you for using our service!
+                </mat-card-subtitle>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <mat-card-content *ngIf="totalNumberOfOrders != null">
+            <div>
+                <h1 style="font-size: 35px;"><strong> {{totalNumberOfOrders}} </strong></h1>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+
+    <mat-card fxFlex="calc(25%-50px)" fxFlex.lt-lg="calc(50%-50px)" style="border-left: 5px solid orangered;">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column">
+                <mat-card-title>Restaurant you just can't get enough from</mat-card-title>
+                <mat-card-subtitle>The restaurant that you made the most orders to!
+                </mat-card-subtitle>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <mat-card-content *ngIf="mostOrderRestaurant && mostOrderRestaurant.RestaurantName">
+            <div>
+                <h1 style="font-size: 35px;"><strong> {{mostOrderRestaurant.RestaurantName}} </strong></h1>
+                <p>You have made "{{mostOrderRestaurant.Times}}" orders to "{{mostOrderRestaurant.RestaurantName}}"</p>
+            </div>
+        </mat-card-content>
+
+
+        <!-- NO DATA / EMPTY CASE -->
+        <mat-card-content *ngIf="!(mostOrderRestaurant && mostOrderRestaurant.RestaurantName)">
+            <div>
+                <h1 style="font-size: 35px;"><strong> No data </strong></h1>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+
+    <mat-card fxFlex="calc(25%-50px)" fxFlex.lt-lg="calc(50%-50px)" style="border-left: 5px solid rgb(68, 0, 255);">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column">
+                <mat-card-title>Happy customer</mat-card-title>
+                <mat-card-subtitle>The restaurant that you gave highest rating to!
+                </mat-card-subtitle>
+            </div>
+            <div>
+                <fa-icon [icon]="IconSmile" size="3x"></fa-icon>
+            </div>
+        </div>
+        <mat-card-content *ngIf="highestRatingDataResult && highestRatingDataResult.RestaurantName">
+            <div>
+                <h1 style="font-size: 35px;"><strong> {{highestRatingDataResult.RestaurantName}} </strong></h1>
+                <div fxLayout="row" id="stars">
+                    <p>Your rating : </p>
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                        <div *ngFor="let star of [1,2,3,4,5]">
+                            <div *ngIf="storeRating(star, highestRatingDataResult.Rating)">
+                                <span class="material-icons">
+                                    star
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <p>Your comment : {{highestRatingDataResult.Comment}} </p>
+                <p>Response : {{highestRatingDataResult.Response}} </p>
+            </div>
+        </mat-card-content>
+
+
+        <!-- NO DATA / EMPTY CASE -->
+        <mat-card-content *ngIf="!(highestRatingDataResult && highestRatingDataResult.RestaurantName)">
+            <h1 style="font-size: 35px;"><strong> No data </strong></h1>
+        </mat-card-content>
+    </mat-card>
+
+
+
+    <mat-card fxFlex="calc(25%-50px)" fxFlex.lt-lg="calc(50%-50px)" style="border-left: 5px solid green;">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column">
+                <mat-card-title>Big spender!</mat-card-title>
+                <mat-card-subtitle>Most expensive order you've given!
+                </mat-card-subtitle>
+            </div>
+            <div>
+                <fa-icon [icon]="IconMoney" size="3x"></fa-icon>
+            </div>
+        </div>
+        <mat-card-content *ngIf="highestOrder && highestOrder.RestaurantName">
+            <div>
+                <div fxLayout="row" fxLayout.lt-sm="column">
+                    <div fxLayout="column" fxFlex="50">
+                        <h1 style="font-size: 35px;"><strong> {{highestOrder.Value}} TL</strong></h1>
+                        <p>Bought from : {{highestOrder.RestaurantName}} </p>
+                    </div>
+                    <div fxLayout="column" fxFlex="50">
+                        <p>Details : </p>
+                        <ol>
+                            <li *ngFor="let item of highestOrder.Details">{{item.Name}}, {{item.Price}}₺ x
+                                {{item.Quantity}} = <strong>{{item.Total}} TL</strong></li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </mat-card-content>
+
+
+        <!-- NO DATA / EMPTY CASE -->
+        <mat-card-content *ngIf="!(highestOrder && highestOrder.RestaurantName)">
+            <h1 style="font-size: 35px;"><strong> No data </strong></h1>
+        </mat-card-content>
+    </mat-card>
+
+
+    <mat-card fxFlex="calc(25%-50px)" fxFlex.lt-lg="calc(50%-50px)" style="border-left: 5px solid rgb(14, 215, 241);">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="column">
+                <mat-card-title>Most recent!</mat-card-title>
+                <mat-card-subtitle>Most recent order that you've given.
+                </mat-card-subtitle>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <mat-card-content *ngIf="recentOrder && recentOrder.RestaurantName">
+            <div fxLayout="row" fxLayout.lt-sm="column">
+                <div fxLayout="column" fxFlex="50">
+                    <h1 style="font-size: 35px;"><strong> {{recentOrder.Total}} TL</strong></h1>
+                    <p>Last change : {{recentOrder.LastUpdate | date:'dd/MM/YYYY HH:mm'}} </p>
+                    <p>Bought from : {{recentOrder.RestaurantName}} </p>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                    <p>Details : </p>
+                    <ol>
+                        <li *ngFor="let item of recentOrder.Details">{{item.Name}}, {{item.Price}}₺ x {{item.Quantity}}
+                            = <strong>{{item.Total}} TL</strong></li>
+                    </ol>
+                </div>
+
+
+            </div>
+        </mat-card-content>
+
+        <!-- NO DATA / EMPTY CASE -->
+        <mat-card-content *ngIf="!(recentOrder && recentOrder.RestaurantName)">
+            <h1 style="font-size: 35px;"><strong> No data </strong></h1>
+        </mat-card-content>
+    </mat-card>
+
+
+    <mat-card fxFlex="calc(100%-50px)">
+        <mat-card-header>
+
+            <mat-card-title>Your favourite restaurant(s)</mat-card-title>
+            <mat-card-subtitle></mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content fxLayout="row wrap" fxLayoutGap="16px">
+            <h1 *ngIf="arrayEmpty(favRestaurants)">You have no favorite restaurants.</h1>
+            <div *ngFor="let restaurant of favRestaurants; index as i" fxFlex="0 0 calc(25% - 16px)" fxFlex.md="calc(33% - 16px)"
+                fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.xs="0 0 calc(100% - 16px)">
+                <div>
+                    <mat-card class="mat-elevation-z4 RestaurantCard"
+                        [routerLink]="['/menu', generateLinkParameter(restaurant.Name, restaurant.RestId) ]"
+                        [queryParams]="{ restId: restaurant.RestId}">
+                        <mat-card-header>
+                            <mat-card-title>{{ restaurant.Name }}</mat-card-title>
+                            <mat-card-subtitle></mat-card-subtitle>
+                        </mat-card-header>
+                        <img mat-card-image
+                            [src]="restaurantImages[i]?.Image ? 'data:image/jpeg;base64,' + restaurantImages[i].Image : '/assets/LogoLarge.png'"
+                            style="max-height: 200px; object-fit: cover;">
+                        <mat-card-content>
+
+
+                            <div fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutGap="3px grid">
+
+
+                                <div matTooltip="Expected time to deliver order. This time is defined by the restaurant."
+                                    fxLayout="column" style="text-align: center;">
+                                    <div fxLayout="row" class="IconWithText">
+                                        <mat-icon>
+                                            access_alarm
+                                        </mat-icon>
+                                        <h2 style="color: #673ab7; margin: 0 !important;"><b>{{
+                                                restaurant.AverageDeliveryTime }} </b></h2>
+                                    </div>
+                                    <div>
+                                        <h4><b>Minutes</b></h4>
+                                    </div>
+        
+                                </div>
+        
+        
+                                <div fxLayout="row" fxLayoutAlign="center center">
+                                    <div *ngFor="let star of [1,2,3,4,5]">
+                                        <div
+                                            *ngIf="storeRating(star, restaurant.Rating); then fullStar; else halfStarOrEmptyStar">
+                                        </div>
+        
+                                        <ng-template #fullStar>
+                                            <span class="material-icons">
+                                                star
+                                            </span>
+                                        </ng-template>
+                                        <ng-template #halfStarOrEmptyStar>
+                                            <div
+                                                *ngIf="halfOrEmptyStar(star, restaurant.Rating); then halfStar; else emptyStar">
+                                            </div>
+                                            <ng-template #halfStar>
+                                                <span class="material-icons">
+                                                    star_half
+                                                </span>
+                                            </ng-template>
+                                            <ng-template #emptyStar>
+                                                <span class="material-icons">
+                                                    star_outline
+                                                </span>
+                                            </ng-template>
+                                        </ng-template>
+                                    </div>
+                                </div>
+        
+        
+                                <div fxLayout="column" fxLayoutAlign="center center"
+                                    matTooltip="Minimum amount required to be able to make a order."
+                                    style="text-align: center;">
+                                    <div fxLayout="row" class="IconWithText">
+                                        <mat-icon>
+                                            credit_card
+                                        </mat-icon>
+                                        <h2 style="color: #673ab7; margin: 0 !important;"><b>{{
+                                                restaurant.MinOrderPrice }} TL</b></h2>
+                                    </div>
+                                    <div>
+                                        <h4><b>Min. Order</b></h4>
+                                    </div>
+                                </div>
+        
+                            </div>
+        
+        
+                            <p style="margin-top: 25px;">
+                                {{ restaurant.About }}
+                            </p>
+                        </mat-card-content>
+                        <mat-card-footer style="text-align: center; background-color: rgba(113, 11, 185, 0.315);">
+                            {{restaurant.City}} / {{restaurant.Street}}
+                        </mat-card-footer>
+                    </mat-card>
+                </div>
+
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

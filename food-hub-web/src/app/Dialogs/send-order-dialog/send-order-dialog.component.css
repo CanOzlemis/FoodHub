@@ -1,0 +1,11 @@
+.closeIcon:hover{
+    cursor: pointer;
+}
+
+:ng-deep .mat-vertical-content{
+    padding-left: 24px !important;
+}
+
+.mat-list-base .mat-list-item, .mat-list-base .mat-list-option {
+    height: auto;
+}

@@ -1,0 +1,28 @@
+mat-icon {
+    vertical-align: middle;
+}
+
+mat-icon:hover {
+    cursor: pointer;
+}
+
+button{
+    white-space: pre-wrap !important;
+  }
+
+
+#Happy {
+    color: rgb(48,194,45);
+}
+
+#Satisfied {
+    color: rgb(184,98,22);
+}
+
+#Unhappy {
+    color: rgb(184,22,22);
+}
+
+#Empty {
+    color: rgb(22,184,177);
+}

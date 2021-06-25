@@ -1,0 +1,200 @@
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Edit restaurant details
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around start"
+        fxLayoutAlign.lt-md="space-around stretch" fxLayoutGap="15px grid">
+        <div fxFlex="calc(50%-15px)" fxFlex.lt-md="calc(100%-15px)" fxLayout="column">
+
+
+
+            <form [formGroup]="editorForm" autocomplete="off" fxFlex fxLayout="column">
+
+                <div fxFlex="100">
+                    <mat-form-field fxFlex matTooltip="The name of the restaurant cant be changed"
+                        matTooltipPosition="right" appearance="outline">
+                        <mat-label>Name</mat-label>
+                        <input matInput type="text" id="name" name="name" formControlName="name">
+                    </mat-form-field>
+                </div>
+                <div fxFlex="100">
+                    <mat-form-field fxFlex appearance="outline">
+                        <mat-label>About</mat-label>
+                        <textarea rows="4" cols="50" matInput id="about" name="about" formControlName="about"
+                            maxlength="200" #about (ngModel)="about"></textarea>
+                        <mat-hint align="end"> {{ about.value.length }} / 200</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div fxFlex="100" fxLayout="row" fxLayoutGap="15px">
+                    <div fxFlex="calc(50%-15px)">
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Average delivery time</mat-label>
+                            <input matInput type="number" id="averageDeliveryTime" name="averageDeliveryTime"
+                                formControlName="averageDeliveryTime" min="0" max="99" required>
+                            <mat-error style="color: red;" *ngIf="editorForm.get('averageDeliveryTime').hasError('max')">Maximum delivery time is 99 minutes</mat-error>
+                            <mat-error style="color: red;" *ngIf="editorForm.get('averageDeliveryTime').hasError('min')">minimum delivery time is 0 minutes</mat-error>
+                            <mat-error style="color: red;" *ngIf="editorForm.get('averageDeliveryTime').hasError('required')">Delivery time field is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="calc(50%-15px)">
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Minimum order price</mat-label>
+                            <input matInput type="number" id="MinOrderPrice" name="MinOrderPrice"
+                                formControlName="minOrderPrice" min="0" max="999" required>
+                                <mat-error style="color: red;" *ngIf="editorForm.get('minOrderPrice').hasError('max')">Maximum order price is 999</mat-error>
+                                <mat-error style="color: red;" *ngIf="editorForm.get('minOrderPrice').hasError('min')">Minimum order price is 0</mat-error>
+                                <mat-error style="color: red;" *ngIf="editorForm.get('minOrderPrice').hasError('required')">Minimum order price field is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxFlex="100" fxLayout="column" fxLayout.lt-sm="column" fxLayoutGap="15px">
+                    <div fxFlex="calc(50%-15px)">
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Facebook</mat-label>
+                            <input matInput type="text" name="facebook" formControlName="facebook" #Facebook>
+                            <mat-hint><strong>https://www.facebook.com/</strong>{{parseSocialMediaLink(Facebook.value)}}</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="calc(50%-15px)">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Instagram</mat-label>
+                            <input matInput type="text" name="instagram" formControlName="instagram" #Instagram>
+                            <mat-hint><strong>https://www.instagram.com/</strong>{{parseSocialMediaLink(Instagram.value)}}</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxFlex="100" fxLayout="column"  fxLayout.lt-sm="column" fxLayoutGap="15px">
+                    <div fxFlex="calc(50%-15px)">
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Twitter</mat-label>
+                            <input matInput type="text" name="twitter" formControlName="twitter" #Twitter>
+                            <mat-hint><strong>https://twitter.com/</strong>{{parseSocialMediaLink(Twitter.value)}}</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="calc(50%-15px)">
+                        <mat-form-field fxFlex appearance="outline">
+                            <mat-label>Phone number</mat-label>
+                            <input matInput type="text" name="phoneNumber" formControlName="phoneNumber" minlength="11" mask="(0000) 000 00 00">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxFlex="100">
+                    <mat-form-field fxFlex appearance="outline">
+                        <mat-label>Google map source</mat-label>
+                        <textarea rows="5" cols="50" matInput type="text" id="mapSrc" name="mapSrc"
+                            formControlName="embeddedMap"></textarea>
+
+                    </mat-form-field>
+                </div>
+
+                <div fxLayoutGap="5px">
+                    <button mat-stroked-button fxFlex="calc(50%-5px)" (click)="isHelpOpen = !isHelpOpen"><mat-icon>help_outline</mat-icon> {{isHelpOpen ?
+                        "Close" : "Open"}} Help</button>
+                    <button mat-stroked-button fxFlex="calc(50%-5px)" color="primary" (click)="tryParseLink()"
+                        matTooltip="Save the google map source"><mat-icon>place</mat-icon> Save map</button>
+                </div>
+
+                <div *ngIf="isHelpOpen">
+                    <mat-card style="border-left: 5px solid rgb(69, 208, 226)">
+                        <mat-card-content>
+                            <ol>
+                                <li>Go to <a href="https://www.google.com/maps" target="_blank">google maps.</a></li>
+                                <li>Find your restaurant and click on it.</li>
+                                <li>On the left side click on "share".</li>
+                                <li>On the screen that openned, click on the second tab "Embed a map".</li>
+                                <li>On the right side of the text there is a button with the text "COPY HTML".</li>
+                                <li>Paste the copied html in the "Google map source".</li>
+                                <li>Once you paste it, click on "save map"</li>
+                                <li>Done.</li>
+
+                            </ol>
+                        </mat-card-content>
+                    </mat-card>
+
+                </div>
+
+                <div style="margin-top: 5px;">
+                    <mat-form-field fxFlex matTooltip="This field is acquired from the google map source"
+                        matTooltipPosition="right" appearance="outline">
+                        <mat-label>Map location</mat-label>
+                        <input matInput type="text" formControlName="mapSrc">
+
+                    </mat-form-field>
+                </div>
+            </form>
+
+        </div>
+
+
+        <div fxFlex="calc(50%-15px)" fxLayout="column" fxLayoutGap="15px">
+            <mat-hint>For best result, image size of 500 x 200 is suggested</mat-hint>
+            <button type="button" mat-raised-button (click)="fileInput.click()" color="primary"><mat-icon>image</mat-icon> Choose image</button>
+            <input hidden #fileInput (change)="onFileSelected($event, fileInput)" type="file" id="file" accept="image/*">
+            <img *ngIf="displayImage" [src]="displayImage | safe" style="max-height: 200px; object-fit:cover; border: 1px solid red;">
+            <h1 *ngIf="!displayImage" style="text-align: center;"><strong>Restaurant has no image to be displayed.</strong></h1>
+
+
+            <table mat-table [dataSource]="workingTimes" class="mat-elevation-z8" style="width: 100%;">
+                <!-- Day Column -->
+                <ng-container matColumnDef="Day">
+                    <th mat-header-cell *matHeaderCellDef> Day </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{enumToDay(element.Day)}}
+                    </td>
+                </ng-container>
+
+                <!-- Open at Column -->
+                <ng-container matColumnDef="OpenTime">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Openning time </th>
+                    <td mat-cell *matCellDef="let element" style="text-align: center;">
+                        <div>
+                            <input matInput [ngxTimepicker]="fullTime" [format]="24"
+                                [value]="element.OpenAt.Hour + ':' + element.OpenAt.Minute" [(ngModel)]="InputOpenTimes[element.Day]"
+                                readonly class="time" appearance="outline">
+                            <ngx-material-timepicker #fullTime></ngx-material-timepicker>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Close at Column -->
+                <ng-container matColumnDef="CloseTime">
+                    <th mat-header-cell *matHeaderCellDef> Closing time </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div style="width: 50px;">
+                            <input matInput [ngxTimepicker]="fullTime" [format]="24"
+                                [value]="element.CloseAt.Hour + ':' + element.CloseAt.Minute" [(ngModel)]="InputCloseTimes[element.Day]"
+                                readonly class="time">
+                            <ngx-material-timepicker #fullTime></ngx-material-timepicker>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['Day', 'OpenTime', 'CloseTime']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['Day', 'OpenTime', 'CloseTime'];"></tr>
+            </table>
+
+
+            <iframe *ngIf="editorForm && editorForm.get('mapSrc').value" fxFlex
+                [src]="editorForm.get('mapSrc').value | safe" height="416" style="border:0;" allowfullscreen=""
+                loading="lazy"></iframe>
+        </div>
+
+
+
+
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions  fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-raised-button color="warn" mat-dialog-close>Cancel</button>
+    <mat-hint style="margin-right: 15px;">Click on times to edit them*</mat-hint>
+    <button mat-raised-button color="primary" (click)="saveChanges()" cdkFocusInitial
+        [disabled]="!editorForm.valid">Save</button>
+</mat-dialog-actions>

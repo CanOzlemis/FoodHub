@@ -1,0 +1,120 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Order details
+    </h1>
+    <span class="closeIcon material-icons" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </span>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content >
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+        <p fxFlex="30"><strong>Order Id: </strong></p>
+        <p fxFlex="70" >{{Orders.OrderId}}</p>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+        <p fxFlex="30"><strong>Sent at: </strong></p>
+        <p fxFlex="70" matTooltip="day/month/year - Hour:minute">{{Orders.Created | date:'dd/MM/YYYY - HH:mm'}}</p>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+        <p fxFlex="30"><strong>Status: </strong></p>
+        <p fxFlex="70" >
+            <strong *ngIf="Orders.Status == 'Rejected'" style="color: red;">{{Orders.Status}}</strong>
+            <strong *ngIf="Orders.Status == 'Accepted'" style="color: green;">{{Orders.Status}}</strong>
+            <strong *ngIf="Orders.Status == 'Waiting'" style="color: yellowgreen;">{{Orders.Status}}</strong>
+            <strong *ngIf="Orders.Status == 'Completed'" style="color: purple;">{{Orders.Status}}</strong>
+        </p>
+    </div>
+
+
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+        <p fxFlex="30"><strong>Customer full name: </strong></p>
+        <p fxFlex="70" >{{Orders.UserFullName}}</p>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+        <p fxFlex="30"><strong>Phone number: </strong></p>
+        <div fxFlex="70" fxLayout="column">
+            <p >{{Orders.PhoneNumber}}</p>
+            <button
+                *ngIf="!Orders.PhoneNumberConfirmed"
+                mat-stroked-button color="primary"
+                matTooltip="CAUTION: This person does not have a confirmed phone number and it is not known if it can be trusted. 
+                This order could be illegitemate, it is highly suggested to confirm before processing the order.
+                You can confirm this phone number by contacting them and proving that this number belongs to them. 
+                This decision will be saved."
+                matTooltipClass="tooltip-red"
+                (click)="ConfirmPhoneNumber()">
+                Confirm number
+            </button>
+        </div>
+        
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between start">
+        <p fxFlex="30" fxFlex.lt-sm="100"><strong>Note: </strong></p>
+        <p fxFlex="70"  fxFlex.lt-sm="100" >{{Orders.Note}}</p>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between start">
+        <p fxFlex="30"  fxFlex.lt-sm="100"><strong>Address: </strong></p>
+        <p fxFlex="70"  fxFlex.lt-sm="100">{{Orders.Address}}</p>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between start">
+        <p fxFlex="30"  fxFlex.lt-sm="100"><strong>Item(s): </strong></p>
+        <div fxFlex="70" fxFlex.lt-sm="100" >
+            <!-- <div fxLayout="column" fxLayoutAlign="start start" *ngFor="let item of Orders.Details">
+                <p>
+                    {{item.Quantity}}x {{item.ProductName}} : ({{item.ProductPrice}}₺ per unit) =
+                    <strong>{{item.ProductPrice * item.Quantity}}₺</strong>
+                </p>
+            </div> -->
+            <ul>
+                <li *ngFor="let item of Orders.Details">{{item.Quantity}}x {{item.ProductName}} : ({{item.ProductPrice}}₺ per unit) =
+                    <strong>{{item.ProductPrice * item.Quantity}}₺</strong></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+        <p fxFlex="30"><strong>Total: </strong></p>
+        <p fxFlex="70"  style="font-size: large;"><strong>{{Orders.Total}} ₺</strong></p>
+    </div>
+
+
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-mat-dialog-actions fxLayout="row" fxLayout.lt-sm="column-reverse" fxLayoutAlign="center center" fxLayoutAlign.lt-sm="center stretch" fxLayoutGap="5px">
+    <button mat-raised-button color="warn" [mat-dialog-close]="'Reject'" fxFlex>
+        <mat-icon>not_interested</mat-icon>
+        Reject
+    </button>
+    <button mat-raised-button style="background-color: #45bbee; color: white;" fxFlex [routerLink]="['/messages']"
+    [queryParams]="{ toUserId: Orders.UserId, toUserName: Orders.UserFullName}"
+    [mat-dialog-close]="false"> 
+        <mat-icon>chat</mat-icon>
+        Send message
+    </button>
+
+        <button mat-raised-button style="background-color: #d4d030; color: white;" [mat-dialog-close]="'Accept'"
+            *ngIf="this.Orders.Status == 'Waiting'" fxFlex>
+            <mat-icon>hourglass_top</mat-icon>
+            Accept
+        </button>
+        <button mat-raised-button style="background-color: #36e236; color: white;" [mat-dialog-close]="'Complete'"
+            *ngIf="this.Orders.Status == 'Accepted'" fxFlex>
+            <mat-icon>check</mat-icon>
+            Complete
+        </button>
+
+
+
+</mat-mat-dialog-actions>

@@ -1,0 +1,41 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; margin: 0 }
+body { font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #f4f7ff; }
+h1 { color: #673ab7; font-weight:bolder;}
+
+mat-dialog-content {
+    max-height: 55vh !important;
+  }
+
+  button{
+    white-space: pre-wrap !important;
+  }
+
+  mat-hint {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+.dialog-responsive {
+    width: fit-content;
+    max-width: 95%;
+    min-width: 600px;
+    max-height: 900px;
+    overflow-y: auto;
+}
+
+@media only screen and (max-width: 760px) {
+    .dialog-responsive {
+        width: 95%;
+        min-width: 0px;
+        max-height: 900px;
+        overflow-y: auto;
+    }
+
+    mat-dialog-content {
+        max-height: 55vh !important;
+      }
+      
+}

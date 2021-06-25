@@ -1,0 +1,63 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Edit menu item
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+    <form [formGroup]="editedItem" fxLayout="column" fxLayout.lt-md="column" fxLayoutAlign="start stretch"
+        fxLayoutAlign.lt-md="center stretch" fxLayoutGap="15px" autocomplete="off">
+
+        <div fxFlex fxLayoutGap="15px">
+            <mat-form-field appearance="outline" fxFlex="calc(33% - 15px)">
+                <mat-label>Category</mat-label>
+                <input matInput formControlName="category" maxlength="25" #category>
+                <mat-hint align="end">{{category.value.length}} / 25</mat-hint>
+                <mat-error style="color: red;" *ngIf="editedItem.get('category').hasError('required')">Category is
+                    required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex="calc(33%-15px)">
+                <mat-label>Name</mat-label>
+                <input matInput type="text" formControlName="name" maxlength="50" #name>
+                <mat-hint align="end">{{name.value.length}} / 50</mat-hint>
+                <mat-error style="color: red;" *ngIf="editedItem.get('name').hasError('required')">Name is required
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex="calc(33%-15px)">
+                <mat-label>Price</mat-label>
+                <input matInput type="number" formControlName="price" max="999" min="0">
+                <span matSuffix>₺</span>
+                <mat-error style="color: red;" *ngIf="editedItem.get('price').hasError('required')">Price is required
+                </mat-error>
+                <mat-error style="color: red;" *ngIf="editedItem.get('price').hasError('max')">Price can't be more than
+                    999</mat-error>
+                <mat-error style="color: red;" *ngIf="editedItem.get('price').hasError('min')">Price can't be less than
+                    0</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div fxFlex fxLayoutGap="15px">
+            <mat-form-field appearance="outline" fxFlex="calc(100%-15px)">
+                <mat-label>About</mat-label>
+                <input matInput type="text" formControlName="about" #about maxlength="200">
+                <mat-hint align="end">{{about.value.length}} / 200</mat-hint>
+            </mat-form-field>
+
+
+        </div>
+
+
+
+    </form>
+</mat-dialog-content>
+<mat-mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-raised-button [mat-dialog-close]="false" color="warn" style="margin-right: 5px;">Cancel</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="editedItem.value"
+        [disabled]="!editedItem.valid">Save</button>
+</mat-mat-dialog-actions>

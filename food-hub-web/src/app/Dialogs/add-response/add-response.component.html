@@ -1,0 +1,26 @@
+<mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>
+        Add response
+    </h1>
+    <mat-icon class="closeIcon" [mat-dialog-close]="false" matTooltip="Close">
+        close
+    </mat-icon>
+</mat-dialog-title>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <div fxFlex>
+        <form [formGroup]="formData" fxLayout="column" fxLayoutAlign="start stretch" autocomplete="off">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Response</mat-label>
+                <textarea matInput type="text" formControlName="response"></textarea>
+            </mat-form-field>
+
+        </form>
+    </div>
+
+</mat-dialog-content>
+<mat-mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-raised-button [mat-dialog-close]="false" color="warn" style="margin-right: 5px;">Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="!formData.valid" (click)="AddResponse()">Post</button>
+</mat-mat-dialog-actions>
